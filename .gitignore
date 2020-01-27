@@ -2,7 +2,9 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+Scribe.db
+Configs/*
+!Configs/
 # C extensions
 *.so
 
@@ -14,7 +16,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/

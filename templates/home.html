@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Flask Parent Template</title>
+
+    <link rel="stylesheet" href="{{ url_for('static',    filename='css/home.css') }}">
+<table>
+  <tr>
+    <td>Alias</td>
+    <td>Enabled</td>
+    <td>IP Address</td>
+    <td>Model</td>
+    <td>Last Updated</td>
+  </tr>
+  {% for device in devices %}
+  <tr>
+    <td>{{ device.alias }}</a></td>
+    {% if device.enabled %}
+      <td><div class="color-box" style="background-color: #33cc33;"></div></td>
+    {% else %}
+      <td><div class="color-box" style="background-color: #ff3300"></div></td>
+    {% endif %}
+    <td>{{ device.ip }}</a></td>
+    <td>{{ device.model }}</a></td>
+    <td>{{ device.last_updated }}</a></td>
+  </tr>
+  {% endfor %}

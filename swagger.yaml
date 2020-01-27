@@ -1,0 +1,228 @@
+swagger: "2.0"
+info:
+  description: Complete API Document
+  version: "1.0.0"
+  title: Scribe Web REST Article
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+basePath: "/api"
+
+# Paths supported by the server application
+paths:
+  /devices:
+    get:
+      x-swagger-router-controller: api.devices
+      operationId: "get"
+      tags:
+        - "Devices"
+      summary: "List devices in Scribe database"
+      description: "Pulls all devices found in the Scribe database and returns them. The device name
+      must always be an ip, this is due to how LibreNMS request devices from Scribe. To combat the previous
+      issue alias has been added as a sort of \"human readable\" name."
+      responses:
+        200:
+          description: "Successfully pulled device list from sqlite db"
+          schema:
+            type: "array"
+            items:
+              properties:
+                name:
+                  type: "string"
+                alias:
+                  type: "string"
+                model:
+                  type: "string"
+                user:
+                  type: "string"
+  /node/fetch/{ip}:
+    parameters:
+      - name: ip
+        in: path
+        type: string
+        required: True
+        description: This should always be the IP of the device to be added
+    get:
+      x-swagger-router-controller: api.devices
+      operationId: "fetch"
+      tags:
+        - "Devices"
+      summary: "Used to get node config"
+      description: "When provided an ip this will spit out the last known config"
+      responses:
+        200:
+          description: "Successfully pulled device list from sqlite db"
+          schema:
+            type: "string"
+  /node/{ip}:
+    parameters:
+      - name: ip
+        in: path
+        type: string
+        required: True
+        description: This should always be the IP of the device to be added
+    post:
+      x-swagger-router-controller: api.devices
+      operationId: "add"
+      tags:
+        - "Devices"
+      summary: "Add a device to Scribe database"
+      description: " The node parameters are as follows: \n
+
+            alias: not requried \n
+
+            user: required \n
+
+            enable: not required \n
+
+            model: required \n
+
+            password: required \n
+
+            username: required"
+      parameters:
+        - name: node
+          in: body
+          description: Used to add a node to Scribe db
+          schema:
+            type: object
+            properties:
+              alias:
+                type: string
+              model:
+                type: string
+              user:
+                type: string
+              username:
+                type: string
+              password:
+                type: string
+              enable:
+                type: string
+      responses:
+        201:
+          description: Successfully added node to Scribe db
+        406:
+          description: Database error
+    delete:
+      x-swagger-router-controller: api.devices
+      operationId: "delete"
+      tags:
+        - "Devices"
+      summary: "Remove a device from Scribe db"
+      description: Remove a node from db via ip address
+      responses:
+        201:
+          description: Successfully added node to Scribe db
+        406:
+          description: Database error
+
+  /users:
+    get:
+      x-swagger-router-controller: api.users
+      operationId: "get"
+      tags:
+        - "Users"
+      summary: "List users in Scribe db"
+      description: "List all users available in the Scribe db. A user in here is a group in LibreNMS"
+      responses:
+        200:
+          description: "Successfully pulled user list from db"
+          schema:
+            type: "array"
+            items:
+              properties:
+                name:
+                  type: string
+  /user/{user}:
+    parameters:
+      - in: path
+        name: user
+        type: string
+        required: true
+        description: The user name
+    post:
+      x-swagger-router-controller: api.users
+      operationId: "add"
+      tags:
+        - "Users"
+      summary: Add a user to Scribe db
+      responses:
+        201:
+          description: Successfully added user to Scribe db
+        406:
+          description: user already exists in Scribe db
+    delete:
+      x-swagger-router-controller: api.users
+      operationId: "delete"
+      tags:
+        - "Users"
+      summary: Remove a user from Scribe db
+      responses:
+        201:
+          description: Successfully removed user to Scribe db
+
+  /models:
+    get:
+      x-swagger-router-controller: api.models
+      operationId: "get"
+      tags:
+        - "Models"
+      summary: "List models in Scribe db"
+      description: "List all models available in the Scribe db."
+      responses:
+        200:
+          description: "Successfully pulled model list from db"
+          schema:
+            type: "array"
+            items:
+              properties:
+                name:
+                  type: string
+
+  /model/{model}:
+    parameters:
+      - in: path
+        name: model
+        type: string
+        required: true
+        description: The model name (think OS name)
+    post:
+      x-swagger-router-controller: api.models
+      operationId: "add"
+      tags:
+        - "Models"
+      summary: Add a model to Scribe db
+      responses:
+        201:
+          description: Successfully added model to Scribe db
+        406:
+          description: Model already exists in Scribe db
+    delete:
+      x-swagger-router-controller: api.models
+      operationId: "delete"
+      tags:
+        - "Models"
+      summary: Remove a model from Scribe db
+      responses:
+        201:
+          description: Successfully removed model to Scribe db
+
+  /model/{ip}:
+    parameters:
+      - in: path
+        name: ip
+        type: string
+        required: true
+        description: The model name (think OS name)
+    get:
+      x-swagger-router-controller: api.models
+      operationId: "get_devices_model"
+      tags:
+        - "Models"
+      summary: Get the model of a device by its IP
+      responses:
+        201:
+          description: Successfully retrieved devices model
