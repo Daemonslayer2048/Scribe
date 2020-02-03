@@ -13,3 +13,4 @@ An Oxidized alternative
   * Local
   * Remote
 * Working Example
+* Emails
