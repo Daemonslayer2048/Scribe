@@ -36,6 +36,3 @@ create table config (
 create table proxies (
 
 );
-
-INSERT INTO device_models ("manufacturer", "Model", "OS") VALUES ("Ubiquiti", "Edge Switch", "EdgeOS");
-INSERT INTO devices (ip, alias, model, username, password, enable) VALUES ("10.0.10.2", "Rack Switch", 1, "ubnt", "ubnt", "Fpd2485um1489w*");
