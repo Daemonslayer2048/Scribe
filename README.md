@@ -1,6 +1,8 @@
 # Scribe
 An Oxidized alternative
 
+Flask powered frontend and connexion API
+
 ## Complete
 * Design database (On Going)
 * Flask API
