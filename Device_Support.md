@@ -1,6 +1,6 @@
 ## Supported Devices
-* Ubiquiti Edge Switch 
+* Ubiquiti Edge Switch
+* Ubiquiti Edge Router 
 
 ## To Add Devices
-* Ubiquiti Edge Router 
 * Calix E7 (show running-config | nomore)
