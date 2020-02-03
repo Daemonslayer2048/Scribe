@@ -46,7 +46,14 @@ def add(ip, device):
             abort(406, "Does this client exist in db already?")
 
 def fetch(ip):
-    # a Gigantic string
-    config = """A gigantic
-     string"""
+    query = """
+    SELECT
+        alias
+    FROM
+        devices
+    WHERE
+        ip = (?)
+    """
+    alias = db.get_query(query, (ip, ))[0]['alias']
+    config = open('./Configs/' + str(alias), "r").read()
     return config
