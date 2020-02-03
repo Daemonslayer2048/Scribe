@@ -27,6 +27,10 @@ def ssh_command(shell, command):
     std_out = shell.recv(102400).decode('ascii')
     return std_out
 
+def clean_config(config):
+    config = str("\n".join(config.split("\n")[2:-3]))
+    return config
+
 def get_config(device):
     ssh = ssh_connection(device['ip'], device['username'], device['password'])
     if device['enable'] is not None:
@@ -37,4 +41,5 @@ def get_config(device):
     config = ssh_command(shell, "show running-config")
     ssh_command(shell, "exit")
     ssh_command(shell, "exit")
+    config = clean_config(config)
     return config
