@@ -1,7 +1,7 @@
 # Scribe
 An Oxidized alternative
 
-Flask powered frontend and connexion API
+Testing Mirrored Repos
 
 ## Complete
 * Design database (On Going)
