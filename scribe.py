@@ -23,7 +23,6 @@ def devices_to_collect():
     Inner Join device_models on devices.model =  device_models.pk
     Where
 	   enabled = 'True'
-	   and last_updated = 'Never'
     ;"""
     values = []
     devices = db.get_query(query, values)
@@ -47,6 +46,8 @@ def update_last_updated(device):
 def collect_device(device):
     if device['model'] == "Edge Switch":
         config = edgeswitch.get_config(device)
+    elif device['model'] == "Edge Router":
+        config = edgeos.get_config(device)
     else:
         print("Unknown device type")
     return config
