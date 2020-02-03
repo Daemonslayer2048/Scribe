@@ -17,3 +17,4 @@ An Oxidized alternative
   * Local
   * Remote
 * Emails
+* Authentication
