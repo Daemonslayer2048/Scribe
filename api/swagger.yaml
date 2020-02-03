@@ -8,11 +8,11 @@ consumes:
 produces:
   - "application/json"
 
-basePath: "/api"
+basePath: "/"
 
 # Paths supported by the server application
 paths:
-  /devices:
+  /nodes:
     get:
       x-swagger-router-controller: api.devices
       operationId: "get"
@@ -49,8 +49,11 @@ paths:
       operationId: "fetch"
       tags:
         - "Devices"
+        - "Oxidized Compatible"
       summary: "Used to get node config"
       description: "When provided an ip this will spit out the last known config"
+      produces:
+        - text/plain; charset=utf-8
       responses:
         200:
           description: "Successfully pulled device list from sqlite db"
@@ -113,6 +116,20 @@ paths:
         - "Devices"
       summary: "Remove a device from Scribe db"
       description: Remove a node from db via ip address
+      parameters:
+        - name: node
+          in: body
+          description: If purge is set to true, the devices configs will be wped from the servers fs.
+          schema:
+            type: object
+            properties:
+              alias:
+                type: string
+              ip:
+                type: string
+              purge:
+                type: boolean
+
       responses:
         201:
           description: Successfully added node to Scribe db

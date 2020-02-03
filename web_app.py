@@ -3,14 +3,10 @@ import flask
 import api
 import connexion
 
-app = connexion.App(__name__, specification_dir='./')
+app = connexion.App(__name__, specification_dir='./api')
 app.add_api('swagger.yaml')
 
-@app.route('/hello')
-def hello_web():
-    return "Hello!"
-
-@app.route('/')
+@app.route('/web')
 def home():
     devices = api.devices.get()
     for device in devices:
