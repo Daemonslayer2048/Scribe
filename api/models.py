@@ -2,7 +2,6 @@ import db
 from flask import abort
 
 def get():
-    models = get_models()
     cur = db.get_db_connection().cursor()
     query = "SELECT * FROM device_models;"
     cur.execute(query)
@@ -10,26 +9,37 @@ def get():
     return db_return
 
 def add(model):
-    query = """INSERT INTO device_models (name) VALUES (?)"""
-    db.run_query(query, (str(model), ))
+    values = []
+    values.append(model['OS'])
+    values.append(model['manufacturer'])
+    values.append(model['model'])
+    query = """INSERT INTO device_models (OS, manufacturer, model) VALUES (?, ?, ?)"""
+    db.run_query(query, values)
 
-def delete(model):
-    query = """DELETE FROM device_models WHERE name = (?)"""
-    response, e = db.run_query(query, (str(model), ))
+def delete(pk):
+    query = """DELETE FROM device_models WHERE pk = (?)"""
+    response, e = db.run_query(query, (str(pk), ))
     if response == 406:
-        query = """SELECT COUNT(*) FROM device_models WHERE name = (?)"""
-        response = db.get_query(query, (str(model), ))
+        query = """SELECT COUNT(*) FROM device_models WHERE pk = (?)"""
+        response = db.get_query(query, (str(pk), ))
         print(response)
-        abort(406, "%s, there are %s device(s) using that model" % (str(e), str(response[0][0])))
+        abort(406, "%s, there are %s device(s) using that model" % (str(e), str(response[0]['COUNT(*)'])))
     elif response == 409:
         abort(406, "%s" % (str(e)))
 
 def get_devices_model(ip):
     cur = db.get_db_connection().cursor()
-    query = """SELECT model FROM devices WHERE ip = (?)"""
-    cur.execute(query, (ip, ))
-    model_id = cur.fetchone()
-    query = """SELECT model FROM device_models WHERE pk = (?)"""
-    cur.execute(query, (model_id['model'], ))
-    model = cur.fetchone()
-    return model
+    query = """
+        SELECT
+	       device_models.manufacturer as "manufacturer",
+	       device_models.model as "model",
+	       device_models.OS as "OS"
+        FROM
+	       devices
+        INNER JOIN device_models ON devices.model = device_models.pk
+        WHERE
+	       devices.ip = (?)
+        """
+    cur.execute(query, (str(ip), ))
+    response = cur.fetchone()
+    return response
