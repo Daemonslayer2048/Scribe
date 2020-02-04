@@ -16,7 +16,7 @@
   {% for device in devices %}
   <tr>
     <td>{{ device.alias }}</a></td>
-    {% if device.enabled %}
+    {% if device.enabled == "1" %}
       <td><div class="color-box" style="background-color: #33cc33;"></div></td>
     {% else %}
       <td><div class="color-box" style="background-color: #ff3300"></div></td>

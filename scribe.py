@@ -22,7 +22,7 @@ def devices_to_collect():
 	   devices
     Inner Join device_models on devices.model =  device_models.pk
     Where
-	   enabled = 'True'
+	   enabled = 1
     ;"""
     values = []
     devices = db.get_query(query, values)
