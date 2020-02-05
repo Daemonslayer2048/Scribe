@@ -1,5 +1,6 @@
 import sqlite3
 
+
 def get_db_connection():
     database = "./Scribe.db"
     try:
@@ -10,11 +11,13 @@ def get_db_connection():
         print(e)
     return db_conn
 
+
 def dict_factory(cursor, row):
     d = {}
     for idx, col in enumerate(cursor.description):
         d[col[0]] = row[idx]
     return d
+
 
 def run_query(query, values):
     con = get_db_connection()
@@ -30,6 +33,7 @@ def run_query(query, values):
         con.close()
         return 409, e
     con.close()
+
 
 def get_query(query, values):
     con = get_db_connection()

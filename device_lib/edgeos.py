@@ -1,5 +1,6 @@
 import paramiko
 import time
+
 ##############################################
 # Definitions
 def ssh_connection(host, user, password):
@@ -9,23 +10,26 @@ def ssh_connection(host, user, password):
         ssh.connect(hostname=host, username=user, password=password)
         return ssh
     except Exception as e:
-        print('Connection Failed')
+        print("Connection Failed")
         print(e)
+
 
 def ssh_command(shell, command):
     shell.send(command + "\n")
     time.sleep(0.5)
-    std_out = shell.recv(102400).decode('ascii')
+    std_out = shell.recv(102400).decode("ascii")
     return std_out
+
 
 def clean_config(config):
     config = str("\n".join(config.split("\n")[1:-2]))
     return config
 
+
 def get_config(device):
-    ssh = ssh_connection(device['ip'], device['username'], device['password'])
-    if device['enable'] is not None:
-        shell = ssh_enable(ssh,  device['enable'])
+    ssh = ssh_connection(device["ip"], device["username"], device["password"])
+    if device["enable"] is not None:
+        shell = ssh_enable(ssh, device["enable"])
     else:
         shell = ssh.invoke_shell()
     ssh_command(shell, "configure")

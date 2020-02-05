@@ -1,10 +1,11 @@
 from datetime import datetime
 from device_lib import *
-from api import  *
+from api import *
 import db
 
 ##############################################
 # Definitions
+
 
 def devices_to_collect():
     query = """
@@ -28,6 +29,7 @@ def devices_to_collect():
     devices = db.get_query(query, values)
     return devices
 
+
 def update_last_updated(device):
     timestamp = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
     query = """
@@ -40,23 +42,25 @@ def update_last_updated(device):
     ;"""
     values = []
     values.append(timestamp)
-    values.append(device['pk'])
+    values.append(device["pk"])
     db.run_query(query, values)
 
+
 def collect_device(device):
-    if device['model'] == "Edge Switch":
+    if device["model"] == "Edge Switch":
         config = edgeswitch.get_config(device)
-    elif device['model'] == "Edge Router":
+    elif device["model"] == "Edge Router":
         config = edgeos.get_config(device)
     else:
         print("Unknown device type")
     return config
+
 
 ##############################################
 # Main
 devices = devices_to_collect()
 for device in devices:
     config = collect_device(device)
-    with open("Configs/" + device['alias'], 'w') as file:
+    with open("Configs/" + device["alias"], "w") as file:
         file.write(config)
     update_last_updated(device)

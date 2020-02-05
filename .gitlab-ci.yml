@@ -10,15 +10,26 @@ stages:
   - Static Analysis
   - Unit Tests
 
-Build:
-  stage: Unit Tests
-  script:
-    - source ./env/bin/activate
-    - python3 ./web_app.py
-
 pylint:
   stage: Static Analysis
   allow_failure: true
   script:
   - pip3 install pylint
-  - pylint -d
+  - pylint ./*.py
+  - pylint ./api/*.py
+  - pylint ./device_lib/*.py
+
+flake8:
+  stage: Static Analysis
+  allow_failure: true
+  script:
+  - pip3 install flake8
+  - flake8 ./*
+  - flake8  ./api/*.py
+  - flake8  ./device_lib/*.py
+
+Build:
+  stage: Unit Tests
+  script:
+    - source ./env/bin/activate
+#    - python3 ./web_app.py
