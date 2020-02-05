@@ -6,16 +6,10 @@ before_script:
   - source ./env/bin/activate
   - pip3 install -r requirements.txt
 
-Build:
-  script:
-    - source ./env/bin/activate
-    - python3 ./web_app.py
-
 Coverage:
   coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
   script:
     - source ./env/bin/activate
-    - python3 ./web_app.py
     - python -m unittest discover
     - coverage report -m
     - coverage-badge
