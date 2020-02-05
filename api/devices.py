@@ -90,7 +90,7 @@ def fetch(ip):
     alias = db.get_query(query, (ip,))[0]["alias"]
     try:
         config = open("./Configs/" + str(alias), "r").read()
-    except FileNotFoundError as e:
+    except FileNotFoundError:
         abort(406, "A config for this device does not exist yet!")
     return config
 

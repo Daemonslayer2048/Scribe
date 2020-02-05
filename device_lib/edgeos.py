@@ -28,10 +28,7 @@ def clean_config(config):
 
 def get_config(device):
     ssh = ssh_connection(device["ip"], device["username"], device["password"])
-    if device["enable"] is not None:
-        shell = ssh_enable(ssh, device["enable"])
-    else:
-        shell = ssh.invoke_shell()
+    shell = ssh.invoke_shell()
     ssh_command(shell, "configure")
     config = ssh_command(shell, "show | no-more")
     ssh_command(shell, "exit")

@@ -8,23 +8,7 @@ import db
 
 
 def devices_to_collect():
-    query = """
-    Select
-	   devices.pk As pk,
-	   devices.ip As ip,
-	   devices.port As port,
-       devices.alias As alias,
-	   devices.username As username,
-	   devices.password As password,
-	   devices.enable As enable,
-	   device_models.model As model,
-	   devices.enabled As enabled
-    From
-	   devices
-    Inner Join device_models on devices.model =  device_models.pk
-    Where
-	   enabled = 1
-    ;"""
+    query = """ SELECT devices.pk As pk, devices.ip As ip, devices.port As port, devices.alias As alias, devices.username As username, devices.password As password, devices.enable As enable, device_models.model As model, devices.enabled As enabled From devices Inner Join device_models on devices.model =  device_models.pk Where enabled = 1;"""
     values = []
     devices = db.get_query(query, values)
     return devices

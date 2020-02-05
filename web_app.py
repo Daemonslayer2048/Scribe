@@ -1,7 +1,6 @@
 from api import *
 import flask
 import api
-import requests
 import connexion
 
 app = connexion.App(__name__, specification_dir="./api")

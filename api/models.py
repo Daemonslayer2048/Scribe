@@ -38,16 +38,7 @@ def delete(pk):
 def get_devices_model(ip):
     cur = db.get_db_connection().cursor()
     query = """
-        SELECT
-	       device_models.manufacturer as "manufacturer",
-	       device_models.model as "model",
-	       device_models.OS as "OS"
-        FROM
-	       devices
-        INNER JOIN device_models ON devices.model = device_models.pk
-        WHERE
-	       devices.ip = (?)
-        """
+        SELECT device_models.manufacturer as "manufacturer", device_models.model as "model", device_models.OS as "OS" FROM devices INNER JOIN device_models ON devices.model = device_models.pk WHERE devices.ip = (?) """
     cur.execute(query, (str(ip),))
     response = cur.fetchone()
     return response
