@@ -11,6 +11,11 @@ Build:
     - source ./env/bin/activate
     - python3 ./web_app.py
 
-Coveage:
+Coverage:
+  coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
   script:
-  coverage: '/Code coverage: \d+\.\d+/'
+    - source ./env/bin/activate
+    - python3 ./web_app.py
+    - python -m unittest discover
+    - coverage report -m
+    - coverage-badge
