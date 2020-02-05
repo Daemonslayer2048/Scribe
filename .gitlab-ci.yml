@@ -6,10 +6,14 @@ before_script:
   - source ./env/bin/activate
   - pip3 install -r requirements.txt
 
-Coverage:
-  coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
+Build:
   script:
     - source ./env/bin/activate
-    - python -m unittest discover
-    - coverage report -m
-    - coverage-badge
+    - python3 ./web_app.py
+
+pylint:
+  stage: Static Analysis
+  allow_failure: true
+  script:
+  - pip3 install pylint
+  - pylint -d
