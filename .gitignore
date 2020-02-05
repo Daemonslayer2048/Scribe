@@ -8,6 +8,8 @@ Configs/*
 # C extensions
 *.so
 
+._sync_*
+
 # Distribution / packaging
 .Python
 build/
