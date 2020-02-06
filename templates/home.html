@@ -15,12 +15,12 @@
   </tr>
   {% for device in devices %}
   <tr>
-    <td>{{ device.alias }}</a></td>
-    {% if device.enabled == "1" %}
-      <td><div class="color-box" style="background-color: #33cc33;"></div></td>
+    <td><a href={{ url_for('config', ip=device.ip) }}>{{ device.alias }}</a></td>
+    <td>{% if device.enabled == "1" %}
+      <div class="color-box" style="background-color: #33cc33;">
     {% else %}
-      <td><div class="color-box" style="background-color: #ff3300"></div></td>
-    {% endif %}
+      <div class="color-box" style="background-color: #ff3300">
+    {% endif %} </div></td>
     <td>{{ device.ip }}</a></td>
     <td>{{ device.model }}</a></td>
     <td>{{ device.last_updated }}</a></td>

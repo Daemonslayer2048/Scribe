@@ -181,7 +181,7 @@ paths:
           required: True
       responses:
         201:
-          description: Successfully enabled node in Scribe db    
+          description: Successfully enabled node in Scribe db
 
   /users:
     get:

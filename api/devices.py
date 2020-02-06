@@ -98,10 +98,8 @@ def fetch(ip):
 def disable(ip):
     query = """Update devices set enabled = False where ip = (?)"""
     db.run_query(query, (str(ip),))
-    print(str(ip))
 
 
 def enable(ip):
     query = """Update devices set enabled = True where ip = (?)"""
     db.run_query(query, (str(ip),))
-    print(str(ip))

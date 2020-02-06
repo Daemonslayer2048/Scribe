@@ -1,5 +1,45 @@
 import sqlite3
 
+users_table = """
+CREATE table users (
+  'pk' INTEGER PRIMARY KEY,
+  'username' text NOT NULL UNIQUE
+);"""
+
+device_models_table = """
+CREATE table device_models (
+  'pk' INTEGER PRIMARY KEY,
+  'manufacturer' text NOT NULL,
+  'model' text NOT NULL,
+  'OS' text
+);
+"""
+devices_table = """
+CREATE table devices (
+  'pk' INTEGER PRIMARY KEY,
+  'ip' text NOT NULL,
+  'port' INT DEFAULT 22,
+  'alias' text,
+  'model' text NOT NULL,
+  'user' text,
+  'username' text NOT NULL,
+  'password' text NOT NULL,
+  'enable' text,
+  'last_updated' text DEFAULT "Never",
+  'enabled' text DEFAULT "True",
+  CONSTRAINT fk_models
+    FOREIGN KEY ('model')
+    REFERENCES device_models ('pk')
+);"""
+
+def build_db():
+    con = get_db_connection()
+    cur = con.cursor()
+    cur.execute(users_table)
+    cur.execute(device_models_table)
+    cur.execute(devices_table)
+    con.commit()
+    con.close()
 
 def get_db_connection():
     database = "./Scribe.db"
