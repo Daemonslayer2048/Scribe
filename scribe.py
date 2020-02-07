@@ -5,25 +5,35 @@ import db
 
 ##############################################
 # Definitions
-
-
 def devices_to_collect():
-    query = """ SELECT devices.pk As pk, devices.ip As ip, devices.port As port, devices.alias As alias, devices.username As username, devices.password As password, devices.enable As enable, device_models.model As model, devices.enabled As enabled From devices Inner Join device_models on devices.model =  device_models.pk Where enabled = 1;"""
+    query = """SELECT
+        devices.pk As pk,
+        devices.ip As ip,
+        devices.port As port,
+        devices.alias As alias,
+        devices.username As username,
+        devices.password As password,
+        devices.enable As enable,
+        device_models.model As model,
+        devices.enabled As enabled
+    From
+        devices
+    Inner Join
+        device_models on devices.model =  device_models.pk
+    Where
+        enabled = 1;"""
     values = []
     devices = db.get_query(query, values)
     return devices
 
 
-def update_last_updated(device):
-    timestamp = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-    query = """
-    Update
+def update_last_updated(device, timestamp):
+    query = """UPDATE
         devices
-    Set
-        last_updated = ?
-    Where
-        pk = ?
-    ;"""
+    SET
+        last_updated = (?)
+    WHERE
+        pk = (?);"""
     values = []
     values.append(timestamp)
     values.append(device["pk"])
@@ -39,12 +49,12 @@ def collect_device(device):
         print("Unknown device type")
     return config
 
-
 ##############################################
 # Main
 devices = devices_to_collect()
 for device in devices:
+    timestamp = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
     config = collect_device(device)
-    with open("Configs/" + device["alias"], "w") as file:
+    with open("Configs/" + device["alias"] + ".cfg", "w") as file:
         file.write(config)
-    update_last_updated(device)
+    update_last_updated(device, timestamp)
