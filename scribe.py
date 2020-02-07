@@ -1,6 +1,8 @@
 from datetime import datetime
+from dulwich import porcelain
 from device_lib import *
 from api import *
+import os
 import db
 
 ##############################################
@@ -55,6 +57,15 @@ devices = devices_to_collect()
 for device in devices:
     timestamp = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
     config = collect_device(device)
-    with open("Configs/" + device["alias"] + ".cfg", "w") as file:
+    alias = str(device["alias"]).replace(" ", "_")
+    repo_dir = "./Repositories/" + alias
+    config_file = repo_dir + "/" + alias + ".cfg"
+    if not os.path.isdir(repo_dir):
+        repo = porcelain.init(repo_dir)
+    else:
+        repo = porcelain.open_repo(repo_dir)
+    with open(config_file, "w") as file:
         file.write(config)
+    porcelain.add(repo, config_file)
+    porcelain.commit(repo, b"A sample commit")
     update_last_updated(device, timestamp)

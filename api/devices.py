@@ -29,8 +29,8 @@ def purge(ip):
         ip = (?)
     """
     alias = db.get_query(query, (ip,))[0]["alias"]
-    if os.path.exists("./Configs/" + str(alias)):
-        os.remove("./Configs/" + str(alias))
+    if os.path.exists("./Repositories/" + str(alias)):
+        os.remove("./Repositories/" + str(alias))
     # Remove device from DB
     query = """DELETE FROM devices WHERE alias = (?)"""
     db.run_query(query, (str(alias),))
@@ -81,15 +81,18 @@ def add(node):
 def fetch(ip):
     query = """
     SELECT
-        alias
+	   devices.alias as alias,
+	   repos.name as repo
     FROM
-        devices
+	   devices
+    INNER JOIN repos ON devices.repo = repos.pk
     WHERE
-        ip = (?)
+	   ip = (?)
     """
-    alias = db.get_query(query, (ip,))[0]["alias"]
+    device = db.get_query(query, (ip,))[0]
+    file = "./Repositories/" + device["repo"] + "/" + device["alias"] + ".cfg"
     try:
-        config = open("./Configs/" + str(alias), "r").read()
+        config = open(file, "r").read()
     except FileNotFoundError:
         abort(406, "A config for this device does not exist yet!")
     return config

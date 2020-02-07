@@ -1,43 +1,97 @@
 import sqlite3
 
 users_table = """
-CREATE table users (
+CREATE TABLE users (
   'pk' INTEGER PRIMARY KEY,
-  'username' text NOT NULL UNIQUE
-);"""
-
-device_models_table = """
-CREATE table device_models (
-  'pk' INTEGER PRIMARY KEY,
-  'manufacturer' text NOT NULL,
-  'model' text NOT NULL,
-  'OS' text
+  'username' TEXT NOT NULL UNIQUE,
+  'group' INTEGER,
+  CONSTRAINT fk_group
+    FOREIGN KEY ('group')
+    REFERENCES groups ('pk')
 );
 """
-devices_table = """
-CREATE table devices (
+
+groups_table = """
+CREATE TABLE groups (
   'pk' INTEGER PRIMARY KEY,
-  'ip' text NOT NULL,
+  'groupname' TEXT NOT NULL UNIQUE
+);
+"""
+
+device_models_table = """
+CREATE TABLE device_models (
+  'pk' INTEGER PRIMARY KEY,
+  'manufacturer' TEXT NOT NULL,
+  'model' TEXT NOT NULL,
+  'OS' TEXT
+);
+"""
+
+repos_table = """
+CREATE TABLE repos (
+	'pk' INTEGER PRIMARY KEY NOT NULL,
+	'name' TEXT NOT NULL
+);
+"""
+
+remote_repos_table = """
+CREATE TABLE remote_repos (
+	'pk' INTEGER PRIMARY KEY NOT NULL,
+	'name' TEXT NOT NULL,
+	'URL' TEXT NOT NULL,
+  	CONSTRAINT fk_name
+  	  FOREIGN KEY ('name')
+  	  REFERENCES repos ('name')
+);
+"""
+
+proxies_tables = """
+CREATE TABLE proxies (
+	'pk' INTEGER PRIMARY KEY NOT NULL,
+	'ip' TEXT NOT NULL,
+  	'port' INT DEFAULT 22,
+  	'username' TEXT NOT NULL,
+    'password' TEXT NOT NULL
+);
+"""
+
+devices_table = """
+CREATE TABLE devices (
+  'pk' INTEGER PRIMARY KEY,
+  'ip' TEXT NOT NULL,
   'port' INT DEFAULT 22,
-  'alias' text,
-  'model' text NOT NULL,
-  'user' text,
-  'username' text NOT NULL,
-  'password' text NOT NULL,
-  'enable' text,
-  'last_updated' text DEFAULT "Never",
-  'enabled' text DEFAULT "True",
+  'alias' TEXT,
+  'model' TEXT NOT NULL,
+  'user' TEXT,
+  'username' TEXT NOT NULL,
+  'password' TEXT NOT NULL,
+  'enable' TEXT,
+  'last_updated' TEXT NOT NULL DEFAULT "Never",
+  'enabled' TEXT NOT NULL DEFAULT "True",
+  'repo' TEXT NOT NULL DEFAULT 1,
+  'proxy' INTEGER,
   CONSTRAINT fk_models
     FOREIGN KEY ('model')
-    REFERENCES device_models ('pk')
+    REFERENCES device_models ('pk'),
+  CONSTRAINT fk_repo
+  	FOREIGN KEY ('repo')
+  	REFERENCES repos ('pk'),
+  CONSTRAINT fk_proxy
+    FOREIGN KEY ('proxy')
+    REFERENCES proxies ('pk')
 );"""
 
 def build_db():
     con = get_db_connection()
     cur = con.cursor()
     cur.execute(users_table)
+    cur.execute(groups_table)
     cur.execute(device_models_table)
+    cur.execute(repos_table)
+    cur.execute(remote_repos_table)
+    cur.execute(proxies_tables)
     cur.execute(devices_table)
+    cur.execute("""INSERT INTO repos (name) VALUES ('Default');""")
     con.commit()
     con.close()
 
