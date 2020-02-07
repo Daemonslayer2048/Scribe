@@ -57,10 +57,20 @@ devices = devices_to_collect()
 for device in devices:
     timestamp = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
     config = collect_device(device)
-    alias = str(device["alias"]).replace(" ", "_")
-    repo_dir = "./Repositories/" + alias
-    config_file = repo_dir + "/" + alias + ".cfg"
-    if not os.path.isdir(repo_dir):
+    query = """
+    SELECT
+       devices.alias as alias,
+       repos.name as repo
+    FROM
+       devices
+    INNER JOIN repos ON devices.repo = repos.pk
+    WHERE
+       ip = (?)
+    """
+    response = db.get_query(query, (device["ip"],))[0]
+    repo_dir = "./Repositories/" + response["repo"]
+    config_file = repo_dir + "/" + response["alias"] + ".cfg"
+    if not os.path.exists(repo_dir):
         repo = porcelain.init(repo_dir)
     else:
         repo = porcelain.open_repo(repo_dir)
