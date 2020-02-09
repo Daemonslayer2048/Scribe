@@ -1,11 +1,10 @@
-PRAGMA foreign_keys = 1;
+PRAGMA foreign_keys = ON;
 
 CREATE TABLE users (
   'pk' INTEGER PRIMARY KEY,
   'username' TEXT NOT NULL UNIQUE,
   'group' INTEGER,
-  CONSTRAINT fk_group
-    FOREIGN KEY ('group')
+  FOREIGN KEY ('group')
     REFERENCES groups ('pk')
 );
 
@@ -23,16 +22,15 @@ CREATE TABLE device_models (
 
 CREATE TABLE repos (
 	'pk' INTEGER PRIMARY KEY NOT NULL,
-	'name' TEXT NOT NULL
+	'repo_name' TEXT NOT NULL UNIQUE,
+	'remote_repo' TEXT DEFAULT NULL,
+	FOREIGN KEY ('remote_repo') REFERENCES remote_repos ('repo_name')
 );
 
 CREATE TABLE remote_repos (
 	'pk' INTEGER PRIMARY KEY NOT NULL,
-	'name' TEXT NOT NULL,
-	'URL' TEXT NOT NULL,
-  	CONSTRAINT fk_name
-  	  FOREIGN KEY ('name')
-  	  REFERENCES repos ('name')
+	'repo_name' TEXT NOT NULL UNIQUE,
+	'URL' TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE proxies (
@@ -55,15 +53,16 @@ CREATE TABLE devices (
   'enable' TEXT,
   'last_updated' TEXT NOT NULL DEFAULT "Never",
   'enabled' TEXT NOT NULL DEFAULT "True",
-  'repo' TEXT NOT NULL DEFAULT 1,
-  'proxy' INTEGER,
+  'repo' TEXT NOT NULL DEFAULT "Default",
+  'proxy' INTEGER DEFAULT NULL,
   CONSTRAINT fk_models
     FOREIGN KEY ('model')
     REFERENCES device_models ('pk'),
   CONSTRAINT fk_repo
   	FOREIGN KEY ('repo')
-  	REFERENCES repos ('pk'),
-  CONSTRAINT fk_proxy
-    FOREIGN KEY ('proxy')
+  	REFERENCES repos ('repo_name'),
+  FOREIGN KEY ('proxy')
     REFERENCES proxies ('pk')
 );
+
+INSERT INTO repos (repo_name) VALUES ("Default");
