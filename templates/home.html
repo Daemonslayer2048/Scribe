@@ -4,7 +4,15 @@
     <meta charset="utf-8">
     <title>Flask Parent Template</title>
 
-    <link rel="stylesheet" href="{{ url_for('static',    filename='css/home.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <ul>
+      <li><a class="current" href="{{ url_for('home') }}">Home</a></li>
+      <li><a href="{{ url_for('repos') }}">Repositories</a></li>
+      <li><a href="{{ url_for('models') }}">Models</a></li>
+      <li><a href="{{ url_for('users') }}">Users</a></li>
+      <li><a href="{{ url_for('groups') }}">Groups</a></li>
+    </ul>
+  </head>
 <table>
   <tr>
     <td>Alias</td>

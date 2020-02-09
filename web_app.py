@@ -14,6 +14,26 @@ def home():
         device.update({'model': api.models.get_devices_model(device['alias'])['model']})
     return flask.render_template("home.html", devices=devices)
 
+@app.route('/web/users')
+def users():
+    users = api.users.get()
+    return flask.render_template("users.html", users=users)
+
+@app.route('/web/groups')
+def groups():
+    groups = api.groups.get()
+    return flask.render_template("groups.html", groups=groups)
+
+@app.route('/web/models')
+def models():
+    models = api.models.get()
+    return flask.render_template("models.html", models=models)
+
+@app.route('/web/repos')
+def repos():
+    repos = api.repos.get()
+    return flask.render_template("repos.html", repos=repos)
+
 @app.route('/web/config/<alias>')
 def config(alias):
     config = api.devices.get_config(str(alias))
