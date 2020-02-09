@@ -5,32 +5,36 @@ import os
 
 def get():
     cur = db.get_db_connection().cursor()
-    query = "SELECT ip, port, alias, model, enabled, last_updated FROM devices;"
+    query = "SELECT ip, port, alias, model, enabled, last_updated FROM devices"
     cur.execute(query)
     db_return = cur.fetchall()
     return db_return
 
 
-def delete(ip):
+def delete(alias):
     # Remove device from DB
-    query = """DELETE FROM devices WHERE ip = (?)"""
-    db.run_query(query, (str(ip),))
-    print(str(ip))
+    query = """DELETE FROM devices WHERE alias = (?)"""
+    db.run_query(query, (str(alias),))
+    print(str(alias))
 
 
-def purge(ip):
-    # Remove device from FS
+def purge(alias):
     query = """
     SELECT
-        alias
+       devices.alias as alias,
+       repos.repo_name as repo
     FROM
-        devices
+       devices
+    INNER JOIN repos ON devices.repo = repos.repo_name
     WHERE
-        ip = (?)
+       alias = (?)
     """
-    alias = db.get_query(query, (ip,))[0]["alias"]
-    if os.path.exists("./Repositories/" + str(alias)):
-        os.remove("./Repositories/" + str(alias))
+    response = db.get_query(query, (alias,))[0]
+    repo_dir = "./Repositories/" + response["repo"]
+    config_file = repo_dir + "/" + response["alias"] + ".cfg"
+    # Remove device from FS
+    if os.path.exists(config_file):
+        os.remove(config_file)
     # Remove device from DB
     query = """DELETE FROM devices WHERE alias = (?)"""
     db.run_query(query, (str(alias),))
@@ -78,19 +82,18 @@ def add(node):
             abort(406, "Does this client exist in db already?")
 
 
-def fetch(ip):
+def get_config(alias):
     query = """
     SELECT
-	   devices.alias as alias,
-	   repos.name as repo
+	   repos.repo_name as repo
     FROM
 	   devices
-    INNER JOIN repos ON devices.repo = repos.pk
+    INNER JOIN repos ON devices.repo = repos.repo_name
     WHERE
-	   ip = (?)
+	   alias = (?)
     """
-    device = db.get_query(query, (ip,))[0]
-    file = "./Repositories/" + device["repo"] + "/" + device["alias"] + ".cfg"
+    repo = db.get_query(query, (str(alias),))[0]["repo"]
+    file = "./Repositories/" + repo + "/" + alias + ".cfg"
     try:
         config = open(file, "r").read()
     except FileNotFoundError:
@@ -98,11 +101,11 @@ def fetch(ip):
     return config
 
 
-def disable(ip):
-    query = """Update devices set enabled = False where ip = (?)"""
-    db.run_query(query, (str(ip),))
+def disable(alias):
+    query = """Update devices set enabled = False where alias = (?)"""
+    db.run_query(query, (str(alias),))
 
 
-def enable(ip):
-    query = """Update devices set enabled = True where ip = (?)"""
-    db.run_query(query, (str(ip),))
+def enable(alias):
+    query = """Update devices set enabled = True where alias = (?)"""
+    db.run_query(query, (str(alias),))

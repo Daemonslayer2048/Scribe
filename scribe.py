@@ -59,17 +59,16 @@ for device in devices:
     config = collect_device(device)
     query = """
     SELECT
-       devices.alias as alias,
-       repos.name as repo
+       repos.repo_name as repo
     FROM
        devices
-    INNER JOIN repos ON devices.repo = repos.pk
+    INNER JOIN repos ON devices.repo = repos.repo_name
     WHERE
-       ip = (?)
+       alias = (?)
     """
-    response = db.get_query(query, (device["ip"],))[0]
-    repo_dir = "./Repositories/" + response["repo"]
-    config_file = repo_dir + "/" + response["alias"] + ".cfg"
+    repo = db.get_query(query, (device["alias"],))[0]['repo']
+    repo_dir = "./Repositories/" + repo
+    config_file = repo_dir + "/" + device["alias"] + ".cfg"
     if not os.path.exists(repo_dir):
         repo = porcelain.init(repo_dir)
     else:

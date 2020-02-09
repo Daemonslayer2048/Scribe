@@ -11,12 +11,12 @@ app.add_api('swagger.yaml')
 def home():
     devices = api.devices.get()
     for device in devices:
-        device.update({'model': api.models.get_devices_model(device['ip'])['model']})
+        device.update({'model': api.models.get_devices_model(device['alias'])['model']})
     return flask.render_template("home.html", devices=devices)
 
-@app.route('/web/config/<ip>')
-def config(ip):
-    config = api.devices.fetch(str(ip))
+@app.route('/web/config/<alias>')
+def config(alias):
+    config = api.devices.get_config(str(alias))
     config = config.split('\n')
     return flask.render_template("config.html", config=config)
 
