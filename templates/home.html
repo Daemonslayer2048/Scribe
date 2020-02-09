@@ -15,7 +15,7 @@
   </tr>
   {% for device in devices %}
   <tr>
-    <td><a href={{ url_for('config', ip=device.ip) }}>{{ device.alias }}</a></td>
+    <td><a href={{ url_for('config', alias=device.alias) }}>{{ device.alias }}</a></td>
     <td>{% if device.enabled == "1" %}
       <div class="color-box" style="background-color: #33cc33;">
     {% else %}

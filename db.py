@@ -122,9 +122,11 @@ def run_query(query, values):
         return cur.lastrowid, "No Error"
     except sqlite3.IntegrityError as e:
         con.close()
+        print(str(e))
         return 406, e
     except sqlite3.OperationalError as e:
         con.close()
+        print(str(e))
         return 409, e
     con.close()
 
