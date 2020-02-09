@@ -12,35 +12,10 @@ basePath: "/"
 
 # Paths supported by the server application
 paths:
-  /nodes:
-    get:
-      x-swagger-router-controller: api.devices
-      operationId: "get"
-      tags:
-        - "Devices"
-      summary: "List devices in Scribe database"
-      description: "Pulls all devices found in the Scribe database and returns them. The device name
-      must always be an ip, this is due to how LibreNMS request devices from Scribe. To combat the previous
-      issue alias has been added as a sort of \"human readable\" name."
-      responses:
-        200:
-          description: "Successfully pulled device list from sqlite db"
-          schema:
-            type: "array"
-            items:
-              properties:
-                alias:
-                  type: "string"
-                enabled:
-                  type: "string"
-                ip:
-                  type: "string"
-                model:
-                  type: "string"
-                port:
-                  type: "string"
-
-  /node/:
+###################################################
+#                     Devices                     #
+###################################################
+  /device:
     post:
       x-swagger-router-controller: api.devices
       operationId: "add"
@@ -86,7 +61,7 @@ paths:
         406:
           description: Database error
 
-  /node/{ip}:
+  /device/{alias}:
     delete:
       x-swagger-router-controller: api.devices
       operationId: "delete"
@@ -95,23 +70,157 @@ paths:
       summary: "Remove a device from Scribe db"
       description: Remove a node from db via ip address
       parameters:
-        - name: ip
+        - name: alias
           in: path
           type: string
           required: True
-          description: This should always be the IP of the device to be added
+          description: This should always be the alias of the device to be added
       responses:
         201:
           description: Successfully added node to Scribe db
         406:
           description: Database error
 
-  /node/fetch/{ip}:
-    get:
+  /device/purge/{alias}:
+    delete:
       x-swagger-router-controller: api.devices
-      operationId: "fetch"
+      operationId: "purge"
       tags:
         - "Devices"
+      summary: "Remove a device from Scribe db"
+      description: Remove a node from db via ip address
+      parameters:
+        - name: alias
+          in: path
+          type: string
+          required: True
+          description: This should always be the alias of the device to be added
+      responses:
+        201:
+          description: Successfully added node to Scribe db
+        406:
+          description: Database error
+
+  /device/disable/{alias}:
+    put:
+      x-swagger-router-controller: api.devices
+      operationId: "disable"
+      tags:
+        - "Devices"
+      summary: "Disable a device in scribe"
+      description: Disable a device in scribe, this does not remove it from the database or FS
+      parameters:
+        - name: alias
+          in: path
+          type: string
+          required: True
+      responses:
+        201:
+          description: Successfully disabled node in Scribe db
+
+  /device/enable/{alias}:
+    put:
+      x-swagger-router-controller: api.devices
+      operationId: "enable"
+      tags:
+        - "Devices"
+      summary: "Enable a device in scribe"
+      description: Enable a device in scribe
+      parameters:
+        - name: alias
+          in: path
+          type: string
+          required: True
+      responses:
+        201:
+          description: Successfully enabled node in Scribe db
+
+  /device/config/{alias}:
+    get:
+      x-swagger-router-controller: api.devices
+      operationId: "get_config"
+      tags:
+        - "Devices"
+      summary: "Used to get node config"
+      description: "When provided an ip this will spit out the last known config"
+      parameters:
+        - name: alias
+          in: path
+          type: string
+          required: True
+          description: This should always be the IP of the device to be added
+      produces:
+        - text/plain; charset=utf-8
+      responses:
+        200:
+          description: "Successfully pulled device list from sqlite db"
+          schema:
+            type: "string"
+
+  /devices:
+    get:
+      x-swagger-router-controller: api.devices
+      operationId: "get"
+      tags:
+        - "Devices"
+      summary: "List devices in Scribe database"
+      description: "Pulls all devices found in the Scribe database and returns them. The device name
+      must always be an ip, this is due to how LibreNMS request devices from Scribe. To combat the previous
+      issue alias has been added as a sort of \"human readable\" name."
+      responses:
+        200:
+          description: "Successfully pulled device list from sqlite db"
+          schema:
+            type: "array"
+            items:
+              properties:
+                alias:
+                  type: "string"
+                enabled:
+                  type: "string"
+                ip:
+                  type: "string"
+                model:
+                  type: "string"
+                port:
+                  type: "string"
+
+###################################################
+#               Oxidized Compatible               #
+###################################################
+  /nodes:
+    get:
+      x-swagger-router-controller: api.oxidized
+      operationId: "get"
+      tags:
+        - "Oxidized Compatible"
+      summary: "List devices in Scribe database"
+      description: "Pulls all devices found in the Scribe database and returns them. The device name
+      must always be an ip, this is due to how LibreNMS request devices from Scribe. To combat the previous
+      issue alias has been added as a sort of \"human readable\" name."
+      responses:
+        200:
+          description: "Successfully pulled device list from sqlite db"
+          schema:
+            type: "array"
+            items:
+              properties:
+                alias:
+                  type: "string"
+                enabled:
+                  type: "string"
+                ip:
+                  type: "string"
+                model:
+                  type: "string"
+                port:
+                  type: "string"
+
+  /node/fetch/{ip}:
+    get:
+      x-swagger-router-controller: api.oxidized
+      operationId: "fetch"
+      tags:
         - "Oxidized Compatible"
       summary: "Used to get node config"
       description: "When provided an ip this will spit out the last known config"
@@ -129,59 +238,9 @@ paths:
           schema:
             type: "string"
 
-  /node/purge/{ip}:
-    delete:
-      x-swagger-router-controller: api.devices
-      operationId: "purge"
-      tags:
-        - "Devices"
-      summary: "Remove a device from Scribe db"
-      description: Remove a node from db via ip address
-      parameters:
-        - name: ip
-          in: path
-          type: string
-          required: True
-          description: This should always be the IP of the device to be added
-      responses:
-        201:
-          description: Successfully added node to Scribe db
-        406:
-          description: Database error
-
-  /node/disable/{ip}:
-    put:
-      x-swagger-router-controller: api.devices
-      operationId: "disable"
-      tags:
-        - "Devices"
-      summary: "Disable a device in scribe"
-      description: Disable a device in scribe, this does not remove it from the database or FS
-      parameters:
-        - name: ip
-          in: path
-          type: string
-          required: True
-      responses:
-        201:
-          description: Successfully disabled node in Scribe db
-
-  /node/enable/{ip}:
-    put:
-      x-swagger-router-controller: api.devices
-      operationId: "enable"
-      tags:
-        - "Devices"
-      summary: "Enable a device in scribe"
-      description: Enable a device in scribe
-      parameters:
-        - name: ip
-          in: path
-          type: string
-          required: True
-      responses:
-        201:
-          description: Successfully enabled node in Scribe db
+###################################################
+#                     Users                       #
+###################################################
 
   /users:
     get:
@@ -227,6 +286,59 @@ paths:
       responses:
         201:
           description: Successfully removed user to Scribe db
+
+###################################################
+#                     Groups                       #
+###################################################
+
+  /groups:
+    get:
+      x-swagger-router-controller: api.groups
+      operationId: "get"
+      tags:
+        - "Groups"
+      summary: "List groups in Scribe db"
+      description: "List all groups available in the Scribe db."
+      responses:
+        200:
+          description: "Successfully pulled group list from db"
+          schema:
+            type: "array"
+            items:
+              properties:
+                name:
+                  type: string
+  /group/{group}:
+    parameters:
+      - in: path
+        name: group
+        type: string
+        required: true
+        description: The group name
+    post:
+      x-swagger-router-controller: api.groups
+      operationId: "add"
+      tags:
+        - "Groups"
+      summary: Add a group to Scribe db
+      responses:
+        201:
+          description: Successfully added group to Scribe db
+        406:
+          description: group already exists in Scribe db
+    delete:
+      x-swagger-router-controller: api.groups
+      operationId: "delete"
+      tags:
+        - "Groups"
+      summary: Remove a group from Scribe db
+      responses:
+        201:
+          description: Successfully removed group to Scribe db
+
+###################################################
+#                     Models                      #
+###################################################
 
   /models:
     get:
@@ -294,10 +406,10 @@ paths:
         201:
           description: Successfully removed model to Scribe db
 
-  /model/{ip}:
+  /model/device/{alias}:
     parameters:
       - in: path
-        name: ip
+        name: alias
         type: string
         required: true
         description: The model name (think OS name)
@@ -319,4 +431,88 @@ paths:
                 manufacturer:
                   type: string
                 model:
+                  type: string
+
+###################################################
+#                      Repos                      #
+###################################################
+  /repos/:
+    get:
+      x-swagger-router-controller: api.repos
+      operationId: "get"
+      tags:
+        - "Repos"
+      summary: Get available repos
+      responses:
+        200:
+          description: "Successfully pulled model list from db"
+          schema:
+            type: "array"
+            items:
+              properties:
+                name:
+                  type: string
+
+  /repo/:
+    post:
+      x-swagger-router-controller: api.repos
+      operationId: "add"
+      tags:
+        - "Repos"
+      summary: Add a repo to Scribe db
+      parameters:
+        - name: repo_name
+          in: body
+          schema:
+            type: object
+            properties:
+              repo_name:
+                type: string
+              remote_repo:
+                type: string
+      responses:
+        201:
+          description: Successfully added model to Scribe db
+        406:
+          description: Model already exists in Scribe db
+
+  /repo/{repo_name}:
+    delete:
+      x-swagger-router-controller: api.repos
+      operationId: "delete"
+      tags:
+        - "Repos"
+      summary: Add a repo to Scribe db
+      parameters:
+        - name: repo_name
+          in: path
+          type: string
+          required: True
+      responses:
+        201:
+          description: Successfully added model to Scribe db
+        406:
+          description: Model already exists in Scribe db
+
+  /repo/device/{alias}:
+    parameters:
+      - in: path
+        name: alias
+        type: string
+        required: true
+        description: The model name (think OS name)
+    get:
+      x-swagger-router-controller: api.repos
+      operationId: "get_device_repo"
+      tags:
+        - "Repos"
+      summary: Get the repo a device belongs to
+      responses:
+        200:
+          description: "Successfully pulled model list from db"
+          schema:
+            type: "array"
+            items:
+              properties:
+                repo_name:
                   type: string
