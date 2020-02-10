@@ -36,7 +36,7 @@ def repos():
 
 @app.route('/web/config/<alias>')
 def config(alias):
-    config = api.devices.get_config(str(alias))
+    config = str(api.devices.get_config(str(alias)))
     config = config.split('\n')
     return flask.render_template("config.html", config=config)
 

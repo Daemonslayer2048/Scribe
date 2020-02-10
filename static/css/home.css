@@ -9,12 +9,12 @@ td {
 }
 
 .color-box {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     display: inline-block;
     background-color: #ccc;
-    left: 5px;
-    top: 5px;
+    left: 10px;
+    top: 10px;
 }
 
 ul {
@@ -42,5 +42,28 @@ li a:hover {
 }
 
 .current {
-  background-color: #4CAF50;
+  background-color: #4583B9;
+}
+
+#generic_table {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#generic_table td, #generic_table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#generic_table tr:nth-child(even){background-color: #f2f2f2;}
+
+#generic_table tr:hover {background-color: #ddd;}
+
+#generic_table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  background-color: #4583B9;
+  text-align:center;
+  color: white;
 }

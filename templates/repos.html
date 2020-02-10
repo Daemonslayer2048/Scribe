@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Flask Parent Template</title>
+    <title>Repos - Scribe</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
     <ul>
@@ -13,10 +13,10 @@
       <li><a href="{{ url_for('groups') }}">Groups</a></li>
     </ul>
   </head>
-<table>
+<table id="generic_table">
   <tr>
-    <td>Name</td>
-    <td>Remote Repository</td>
+    <th>Name</th>
+    <th>Remote Repository</th>
   </tr>
   {% for repo in repos %}
   <tr>

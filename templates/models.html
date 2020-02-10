@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Flask Parent Template</title>
+    <title>Models - Scribe</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
     <ul>
@@ -13,11 +13,11 @@
       <li><a href="{{ url_for('groups') }}">Groups</a></li>
     </ul>
   </head>
-<table>
+<table id="generic_table">
   <tr>
-    <td>Manufacturer</td>
-    <td>Model</td>
-    <td>Operating System</td>
+    <th>Manufacturer</th>
+    <th>Model</th>
+    <th>Operating System</th>
   </tr>
   {% for model in models %}
   <tr>
