@@ -2,12 +2,14 @@
 An Oxidized alternative
 
 ## Complete
-* Design database (On Going)
-* Flask API
+### Web  
+ * Working Example
+ * View latest Config
+ * Disable Devices
+### API  
  * Add/Remove Device
  * Add/Remove User
  * Add/Remove Group
-* Working Example
 * Git Repos
   * Local
 
@@ -19,3 +21,4 @@ An Oxidized alternative
 * Authentication
 * Endpoint testing with GitLab CI
 * Security (Something/Anything)
+* Improve gathering repo directory, config file name, etc. Appending filenames manually is not the correct way to do it.
