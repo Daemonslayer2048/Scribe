@@ -8,13 +8,12 @@ td {
     text-align:center;
 }
 
-.color-box {
-    width: 12px;
-    height: 12px;
-    display: inline-block;
-    background-color: #ccc;
-    left: 10px;
-    top: 10px;
+.color-dot {
+  height: 15px;
+  width: 15px;
+  background-color: #ccc;
+  border-radius: 50%;
+  display: inline-block;
 }
 
 ul {

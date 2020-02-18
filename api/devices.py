@@ -5,7 +5,24 @@ import os
 
 def get():
     cur = db.get_db_connection().cursor()
-    query = "SELECT ip, port, alias, model, enabled, last_updated FROM devices"
+    query = """
+    SELECT
+        devices.pk As pk,
+        devices.alias As alias,
+        devices.ip As ip,
+        devices.port As port,
+        devices.enabled As enabled,
+        devices.last_updated As last_updated,
+        device_models.model As model,
+        device_models.os As os,
+        device_models.manufacturer As manufacturer,
+        repos.repo_name as repo
+    From
+        devices
+    Inner Join
+        device_models on devices.model = device_models.pk,
+        repos on devices.repo = repos.repo_name
+    """
     cur.execute(query)
     db_return = cur.fetchall()
     return db_return

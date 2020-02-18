@@ -26,13 +26,30 @@ def get_device_repo(alias):
     cur = db.get_db_connection().cursor()
     query = """
     SELECT
-	   repos.repo_name as repo
+        repos.repo_name as repo
     FROM
-	   devices
+        devices
     INNER JOIN repos ON devices.repo = repos.repo_name
     WHERE
-	   alias = (?)
+        alias = (?)
     """
     cur.execute(query, (str(alias),))
     response = cur.fetchone()
+    return response
+
+def get_repo_devices(repo_name):
+    query = """
+    SELECT
+        devices.alias as alias,
+        devices.ip as ip,
+        device_models.model as model
+    FROM
+        devices
+    INNER JOIN
+        repos ON devices.repo = repos.repo_name,
+        device_models ON devices.model = device_models.pk
+    WHERE
+        repos.repo_name = (?)
+    """
+    response = db.get_query(query, (str(repo_name), ))
     return response

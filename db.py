@@ -81,6 +81,7 @@ CREATE TABLE devices (
     REFERENCES proxies ('pk')
 );"""
 
+
 def build_db():
     con = get_db_connection()
     cur = con.cursor()
@@ -94,6 +95,7 @@ def build_db():
     cur.execute("""INSERT INTO repos (name) VALUES ('Default');""")
     con.commit()
     con.close()
+
 
 def get_db_connection():
     database = "./Scribe.db"

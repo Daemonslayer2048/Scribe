@@ -13,14 +13,16 @@
       <li><a href="{{ url_for('groups') }}">Groups</a></li>
     </ul>
   </head>
-<table id="generic_table">
-  <tr>
-    <th>Name</th>
-    <th>Remote Repository</th>
-  </tr>
-  {% for repo in repos %}
-  <tr>
-    <td><a href={{ url_for('repo_devices', repo=repo.repo_name) }}>{{ repo.repo_name }}</a></td>
-    <td>{{ repo.remote_repo }}</td>
-  </tr>
-  {% endfor %}
+  <table id="generic_table">
+    <tr>
+      <th>Device Alias</th>
+      <th>IP Addres</th>
+      <th>Model</th>
+    </tr>
+    {% for device in devices %}
+    <tr>
+      <td> {{ device.alias }} </td>
+      <td> {{ device.ip }} </td>
+      <td> {{ device.model }} </td>
+    </tr>
+    {% endfor %}

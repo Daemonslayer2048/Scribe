@@ -157,6 +157,33 @@ paths:
           schema:
             type: "string"
 
+  /device/config/{alias}/{hash}:
+    get:
+      x-swagger-router-controller: api.git
+      operationId: "get_config_at_hash"
+      tags:
+        - "Devices"
+      summary: "Used to get a previous node config when given a hash."
+      description: "When provided with a device alias and hash, the devices entire config at that point will be returned"
+      parameters:
+        - name: alias
+          in: path
+          type: string
+          required: True
+          description: This should always be the IP of the device to be added
+        - name: hash
+          in: path
+          type: string
+          required: True
+          description: This should always be the IP of the device to be added
+      produces:
+        - text/plain; charset=utf-8
+      responses:
+        200:
+          description: "Successfully pulled device list from sqlite db"
+          schema:
+            type: "string"
+
   /devices:
     get:
       x-swagger-router-controller: api.devices
@@ -504,6 +531,29 @@ paths:
     get:
       x-swagger-router-controller: api.repos
       operationId: "get_device_repo"
+      tags:
+        - "Repos"
+      summary: Get the repo a device belongs to
+      responses:
+        200:
+          description: "Successfully pulled model list from db"
+          schema:
+            type: "array"
+            items:
+              properties:
+                repo_name:
+                  type: string
+
+  /repo/device/{alias}/git_logs:
+    parameters:
+      - in: path
+        name: alias
+        type: string
+        required: true
+        description: The model name (think OS name)
+    get:
+      x-swagger-router-controller: api.git
+      operationId: "get_device_git_log"
       tags:
         - "Repos"
       summary: Get the repo a device belongs to

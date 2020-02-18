@@ -1,8 +1,8 @@
+#! /usr/bin/python3
 from datetime import datetime
-from dulwich import porcelain
 from device_lib import *
 from api import *
-import os
+import argparse
 import db
 
 ##############################################
@@ -16,7 +16,7 @@ def devices_to_collect():
         devices.username As username,
         devices.password As password,
         devices.enable As enable,
-        device_models.model As model,
+        device_models.OS As OS,
         devices.enabled As enabled
     From
         devices
@@ -27,6 +27,28 @@ def devices_to_collect():
     values = []
     devices = db.get_query(query, values)
     return devices
+
+
+def get_device_info(device):
+    query = """SELECT
+        devices.pk As pk,
+        devices.ip As ip,
+        devices.port As port,
+        devices.alias As alias,
+        devices.username As username,
+        devices.password As password,
+        devices.enable As enable,
+        device_models.OS As OS,
+        devices.enabled As enabled
+    From
+        devices
+    Inner Join
+        device_models on devices.model =  device_models.pk
+    Where
+        enabled = 1 and devices.alias = (?)"""
+    values = [device]
+    device_info = db.get_query(query, values)
+    return device_info
 
 
 def update_last_updated(device, timestamp):
@@ -43,38 +65,61 @@ def update_last_updated(device, timestamp):
 
 
 def collect_device(device):
-    if device["model"] == "Edge Switch":
+    if device["OS"] == "EdgeSwitch":
         config = edgeswitch.get_config(device)
-    elif device["model"] == "Edge Router":
+    elif device["OS"] == "EdgeOS":
         config = edgeos.get_config(device)
+    elif device["OS"] == "JunOS":
+        config = junos.get_config(device)
     else:
         print("Unknown device type")
     return config
 
+
+##########################################################################
+#  ArgumentParser
+parser = argparse.ArgumentParser(prog="PROG", description="""""", epilog="""""",)
+parser.add_argument(
+    "-d", "--device", help="",
+)
+args = parser.parse_args()
+
 ##############################################
 # Main
-devices = devices_to_collect()
-for device in devices:
+if args.device:
+    device = args.device
     timestamp = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-    config = collect_device(device)
-    query = """
-    SELECT
-       repos.repo_name as repo
-    FROM
-       devices
-    INNER JOIN repos ON devices.repo = repos.repo_name
-    WHERE
-       alias = (?)
-    """
-    repo = db.get_query(query, (device["alias"],))[0]['repo']
+    device_info = get_device_info(device)[0]
+    repo = str(repos.get_device_repo(device)["repo"])
     repo_dir = "./Repositories/" + repo
-    config_file = repo_dir + "/" + device["alias"] + ".cfg"
-    if not os.path.exists(repo_dir):
-        repo = porcelain.init(repo_dir)
-    else:
-        repo = porcelain.open_repo(repo_dir)
+    config_file = repo_dir + "/" + device + ".cfg"
+    config = collect_device(device_info)
+    repo = git.get_repo(repo_dir)
     with open(config_file, "w") as file:
         file.write(config)
-    porcelain.add(repo, config_file)
-    porcelain.commit(repo, b"A sample commit")
-    update_last_updated(device, timestamp)
+    git.add(repo, device)
+    git.commit_to_repo(repo)
+    update_last_updated(device_info, timestamp)
+else:
+    devices = devices_to_collect()
+    for device in devices:
+        timestamp = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+        config = collect_device(device)
+        query = """
+        SELECT
+            repos.repo_name as repo
+        FROM
+            devices
+        INNER JOIN repos ON devices.repo = repos.repo_name
+        WHERE
+            alias = (?)
+        """
+        repo = db.get_query(query, (device["alias"],))[0]["repo"]
+        repo_dir = "./Repositories/" + repo
+        config_file = repo_dir + "/" + device["alias"] + ".cfg"
+        repo = git.get_repo(repo_dir)
+        with open(config_file, "w") as file:
+            file.write(config)
+        git.add(repo, device["alias"])
+        git.commit_to_repo(repo)
+        update_last_updated(device, timestamp)
