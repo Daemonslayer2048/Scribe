@@ -10,8 +10,9 @@ An Oxidized alternative
  * Add/Remove Device
  * Add/Remove User
  * Add/Remove Group
-* Git Repos
-  * Local
+ * Endpoint testing with GitLab CI (On going)
+ * Git Repos
+   * Local
 
 ## To-do
 * Working Docker Image
@@ -19,7 +20,7 @@ An Oxidized alternative
   * Remote
 * Emails
 * Authentication
-* Endpoint testing with GitLab CI
 * Security (Something/Anything)
 * Improve gathering repo directory, config file name, etc. Appending filenames manually is not the correct way to do it.
 * API /repo/device/{alias} returns 204 if alias is not found, you need to return an error!
+* Move to MariaDB

@@ -14,7 +14,7 @@ Build:
   script:
     - source ./env/bin/activate
     # Start Webapp (db should be built on start up)
-    - python3 ./web_app.py &
+    - python3 ./web_app.py 
     # Test API endpoints
     # Add a model
     - |
