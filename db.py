@@ -92,7 +92,7 @@ def build_db():
     cur.execute(remote_repos_table)
     cur.execute(proxies_tables)
     cur.execute(devices_table)
-    cur.execute("""INSERT INTO repos (name) VALUES ('Default');""")
+    cur.execute("""INSERT INTO repos (repo_name) VALUES ('Default');""")
     con.commit()
     con.close()
 
