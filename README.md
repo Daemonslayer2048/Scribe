@@ -5,6 +5,7 @@ An Oxidized alternative
 ### Web  
  * Working Example
  * View latest Config
+ * View configs in Git repos
  * Disable Devices
 ### API  
  * Add/Remove Device
@@ -24,3 +25,6 @@ An Oxidized alternative
 * Improve gathering repo directory, config file name, etc. Appending filenames manually is not the correct way to do it.
 * API /repo/device/{alias} returns 204 if alias is not found, you need to return an error!
 * Move to MariaDB
+* Add devices in WebUI
+* Add repos in WebUI
+* Add models in WebUI
