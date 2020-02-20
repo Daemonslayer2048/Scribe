@@ -22,7 +22,7 @@ paths:
       tags:
         - "Devices"
       summary: "Add a device to Scribe database"
-      description: "A nodes to Scribe DB"
+      description: "Add nodes to Scribe DB"
       parameters:
         - name: node
           in: body
@@ -87,8 +87,8 @@ paths:
       operationId: "purge"
       tags:
         - "Devices"
-      summary: "Remove a device from Scribe db"
-      description: Remove a node from db via ip address
+      summary: "Remove a device from Scribe db, and the devices configs."
+      description: Remove a node from the Scribe DB and purge the device configs from the filesystem.
       parameters:
         - name: alias
           in: path
@@ -108,7 +108,7 @@ paths:
       tags:
         - "Devices"
       summary: "Disable a device in scribe"
-      description: Disable a device in scribe, this does not remove it from the database or FS
+      description: Disable a device in scribe, this does not remove it from the database or the filesystem.
       parameters:
         - name: alias
           in: path
@@ -142,18 +142,18 @@ paths:
       tags:
         - "Devices"
       summary: "Used to get node config"
-      description: "When provided an ip this will spit out the last known config"
+      description: "Respond with the most up to date config avilable."
       parameters:
         - name: alias
           in: path
           type: string
           required: True
-          description: This should always be the IP of the device to be added
+          description: The device alias
       produces:
         - text/plain; charset=utf-8
       responses:
         200:
-          description: "Successfully pulled device list from sqlite db"
+          description: "Successfully pulled device config from filesystem"
           schema:
             type: "string"
 
@@ -170,17 +170,17 @@ paths:
           in: path
           type: string
           required: True
-          description: This should always be the IP of the device to be added
+          description: This should always be the alias of the device
         - name: hash
           in: path
           type: string
           required: True
-          description: This should always be the IP of the device to be added
+          description: This is the short hash of the git commit
       produces:
         - text/plain; charset=utf-8
       responses:
         200:
-          description: "Successfully pulled device list from sqlite db"
+          description: "Successfully pulled device config from repository"
           schema:
             type: "string"
 
@@ -191,9 +191,7 @@ paths:
       tags:
         - "Devices"
       summary: "List devices in Scribe database"
-      description: "Pulls all devices found in the Scribe database and returns them. The device name
-      must always be an ip, this is due to how LibreNMS request devices from Scribe. To combat the previous
-      issue alias has been added as a sort of \"human readable\" name."
+      description: "Pulls all devices found in the Scribe database and returns them."
       responses:
         200:
           description: "Successfully pulled device list from sqlite db"
@@ -222,9 +220,7 @@ paths:
       tags:
         - "Oxidized Compatible"
       summary: "List devices in Scribe database"
-      description: "Pulls all devices found in the Scribe database and returns them. The device name
-      must always be an ip, this is due to how LibreNMS request devices from Scribe. To combat the previous
-      issue alias has been added as a sort of \"human readable\" name."
+      description: "Pulls all devices found in the Scribe database and returns them, this is an Oxidized compatible api endpoint. (Well kinda, its not done yet)"
       responses:
         200:
           description: "Successfully pulled device list from sqlite db"
@@ -256,12 +252,12 @@ paths:
           in: path
           type: string
           required: True
-          description: This should always be the IP of the device to be added
+          description: This should always be the IP of the device to be found
       produces:
         - text/plain; charset=utf-8
       responses:
         200:
-          description: "Successfully pulled device list from sqlite db"
+          description: "Successfully pulled device list from Scribe DB"
           schema:
             type: "string"
 
@@ -439,16 +435,16 @@ paths:
         name: alias
         type: string
         required: true
-        description: The model name (think OS name)
+        description: Alias of device
     get:
       x-swagger-router-controller: api.models
       operationId: "get_devices_model"
       tags:
         - "Models"
-      summary: Get the model of a device by its IP
+      summary: Get the model of a device by its alias
       responses:
         200:
-          description: "Successfully pulled model list from db"
+          description: "Successfully pulled device model from Scribe"
           schema:
             type: "array"
             items:
@@ -472,7 +468,7 @@ paths:
       summary: Get available repos
       responses:
         200:
-          description: "Successfully pulled model list from db"
+          description: "Successfully pulled repos list from db"
           schema:
             type: "array"
             items:
@@ -499,9 +495,9 @@ paths:
                 type: string
       responses:
         201:
-          description: Successfully added model to Scribe db
+          description: Successfully added repo to Scribe db
         406:
-          description: Model already exists in Scribe db
+          description: Repo already exists in Scribe db
 
   /repo/{repo_name}:
     delete:
@@ -517,9 +513,9 @@ paths:
           required: True
       responses:
         201:
-          description: Successfully added model to Scribe db
+          description: Successfully added repo to Scribe db
         406:
-          description: Model already exists in Scribe db
+          description: Repo already exists in Scribe db
 
   /repo/device/{alias}:
     parameters:
@@ -527,7 +523,7 @@ paths:
         name: alias
         type: string
         required: true
-        description: The model name (think OS name)
+        description: The device alias
     get:
       x-swagger-router-controller: api.repos
       operationId: "get_device_repo"
@@ -536,7 +532,7 @@ paths:
       summary: Get the repo a device belongs to
       responses:
         200:
-          description: "Successfully pulled model list from db"
+          description: "Successfully pulled devices repo from Scribe"
           schema:
             type: "array"
             items:
@@ -550,7 +546,7 @@ paths:
         name: alias
         type: string
         required: true
-        description: The model name (think OS name)
+        description: The device alias
     get:
       x-swagger-router-controller: api.git
       operationId: "get_device_git_log"
@@ -559,10 +555,40 @@ paths:
       summary: Get the repo a device belongs to
       responses:
         200:
-          description: "Successfully pulled model list from db"
+          description: "Successfully pulled devices git log from repo"
           schema:
             type: "array"
             items:
               properties:
                 repo_name:
                   type: string
+
+###################################################
+#                       Web                       #
+###################################################
+  /web_api/config/{alias}/{hash}:
+    get:
+      x-swagger-router-controller: api.web
+      operationId: "get_config_at_hash"
+      tags:
+        - "Front End API"
+      summary: "Used to get a previous node config when given a hash."
+      description: "When provided with a device alias and hash, the devices entire config at that point will be returned"
+      parameters:
+        - name: alias
+          in: path
+          type: string
+          required: True
+          description: This should always be the alias of the device
+        - name: hash
+          in: path
+          type: string
+          required: True
+          description: This is the short hash of the git commit
+      produces:
+        - text/plain; charset=utf-8
+      responses:
+        200:
+          description: "Successfully pulled device config from repository"
+          schema:
+            type: "string"
