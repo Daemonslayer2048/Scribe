@@ -1,9 +1,43 @@
-pre{
-    counter-reset: line;
+.Config-Box {
+  width 75%;
+  border: 2px solid #cccccc;
+  clear: both;
+  vertical-align: middle;
+  padding: 5px;
+  font-size: 13px;
+  word-break: break-all;
+  word-wrap: break-word;
 }
-code{
-    counter-increment: line;
+
+.Config-Menu {
+  clear: both;
+  float: right;
+  text-align: left;
+  padding: 5px;
 }
-code:before{
-    content: counter(line);
+
+#config_table td {
+  white-space: pre;
+  text-align: left;
+}
+
+#config_table table, #config_table tr, #config_table td {
+    border: none;
+}
+
+.Device_Info {
+  clear: both;
+  float: left;
+}
+
+#generic_table td {
+  white-space: pre;
+  text-align: left;
+}
+
+#generic_table th {
+  text-align: center;
+}
+
+#Device_Info table, #Device_Info tr, #Device_Info td {
 }

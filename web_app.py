@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#! python3
 import api
 import db
 import flask
@@ -68,7 +68,10 @@ def repo_devices(repo):
 def config(alias):
     config = str(api.devices.get_config(str(alias)))
     config = config.split("\n")
-    return flask.render_template("config.html", config=config)
+    logs = api.git.get_device_git_log(alias)
+    repo = api.repos.get_device_repo(alias)
+    model = api.models.get_devices_model(alias)
+    return flask.render_template("config.html", repo=repo, model=model, alias=alias, config=config, logs=logs)
 
 
 if __name__ == "__main__":
