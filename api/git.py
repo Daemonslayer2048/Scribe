@@ -10,8 +10,8 @@ def get_git_log(repo, config_file):
         commit = {}
         commit['Hash'] = line.split(":")[0]
         commit['Author'] = line.split(":")[1]
-        commit['Date'] = line.split(":")[2]
-        commit['Message'] = line.rstrip().split(":")[3]
+        commit['Date'] = line.split(":")[2] + ":" + line.split(":")[3] + ":" + line.split(":")[4]
+        commit['Message'] = line.rstrip().split(":")[5]
         commits.append(commit)
     return commits
 
