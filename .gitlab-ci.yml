@@ -36,10 +36,13 @@ Build:
     - python3 ./web_app.py &
     # Test API Model endpoints
     # Add a model
-    - curl -X POST --header 'Content-Type: application/json' --header 'Accept:application/json' -d '{ "OS":"EdgeOS", "manufacturer":"Ubiquiti", "model":"Edge Router" }' 'http://127.0.0.1:5000/model/'
+    - |
+      curl -X POST --header 'Content-Type: application/json' --header 'Accept:application/json' -d '{ "OS":"EdgeOS", "manufacturer":"Ubiquiti", "model":"Edge Router" }' 'http://127.0.0.1:5000/model/'
     # View models
-    - curl -X GET --header 'Accept: application/json' 'http://127.0.0.1:5000/models'
+    - |
+      curl -X GET --header 'Accept: application/json' 'http://127.0.0.1:5000/models'
     # Delete model first added
-    - curl -X DELETE --header 'Accept: application/json' 'http://127.0.0.1:5000/model/1'
+    - |
+      curl -X DELETE --header 'Accept: application/json' 'http://127.0.0.1:5000/model/1'
     # Kill webserver if we made it this far
     - kill %1
