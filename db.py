@@ -30,7 +30,7 @@ CREATE TABLE device_models (
 repos_table = """
 CREATE TABLE repos (
 	'pk' INTEGER PRIMARY KEY NOT NULL,
-	'name' TEXT NOT NULL
+	'repo_name' TEXT NOT NULL
 );
 """
 
