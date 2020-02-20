@@ -16,6 +16,7 @@ Build:
     # Start Webapp (db should be built on start up)
     - python3 ./web_app.py &
     # Test API endpoints
+    - ufw stop
     # Add a model
     - |
       curl -X POST --header 'Content-Type: application/json' --header 'Accept:application/json' -d '{ \
