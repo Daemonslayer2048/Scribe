@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#! python3
 from datetime import datetime
 from device_lib import *
 from api import *
