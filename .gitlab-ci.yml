@@ -34,14 +34,56 @@ Build:
     - source ./env/bin/activate
     # Start Webapp (db should be built on start up)
     - python3 ./web_app.py &
-    # Test API Model endpoints
+    # Test API endpoints
     # Add a model
     - |
-      curl -X POST --header 'Content-Type: application/json' --header 'Accept:application/json' -d '{ "OS":"EdgeOS", "manufacturer":"Ubiquiti", "model":"Edge Router" }' 'http://127.0.0.1:5000/model/'
+      curl -X POST --header 'Content-Type: application/json' --header 'Accept:application/json' -d '{ \
+      "OS":"EdgeOS", \
+      "manufacturer":"Ubiquiti", \
+      "model":"Edge Router" \
+      }' 'http://127.0.0.1:5000/model/'
     # View models
     - |
       curl -X GET --header 'Accept: application/json' 'http://127.0.0.1:5000/models'
-    # Delete model first added
+    # Add a device
+    - |
+      curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/problem+json' -d '{ \
+      "alias":"API Test", \
+      "enable":"Enable_String", \
+      "enabled":true, \
+      "ip":"192.168.1.1", \
+      "model":1, \
+      "password":"string", \
+      "port":22, \
+      "username":"string" \
+      }' 'http://127.0.0.1:5000/device'
+    # Get Devices
+    - |
+      curl -X GET --header 'Accept: application/json' 'http://127.0.0.1:5000/devices'
+    # Disable Device
+    - |
+      curl -X PUT --header 'Content-Type: application/json' --header 'Accept: application/json' 'http://127.0.0.1:5000/device/disable/API%20Test'
+    # Enable Device
+    - |
+      curl -X PUT --header 'Content-Type: application/json' --header 'Accept: application/json' 'http://127.0.0.1:5000/device/enable/API%20Test'
+    # Get a devices repo
+    - |
+      curl -X GET --header 'Accept: application/json' 'http://127.0.0.1:5000/repo/device/API%20Test'
+    # Create a repo
+    - |
+      curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{ \
+      "repo_name":"API Test" \
+      }' 'http://127.0.0.1:5000/repo/'
+    # Get all repos
+    - |
+      curl -X GET --header 'Accept: application/json' 'http://127.0.0.1:5000/repos/'
+    # Delete first device
+    - |
+      curl -X DELETE --header 'Accept: application/json' 'http://127.0.0.1:5000/device/API%20Test'
+    # Delete first repo
+    - |
+      curl -X DELETE --header 'Accept: application/json' 'http://127.0.0.1:5000/repo/API%20Test'
+    # Delete first model
     - |
       curl -X DELETE --header 'Accept: application/json' 'http://127.0.0.1:5000/model/1'
     # Kill webserver if we made it this far

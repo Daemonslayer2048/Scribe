@@ -9,11 +9,16 @@
   word-wrap: break-word;
 }
 
+.container {
+  height: 200px;
+  margin: auto;
+}
+
 .Config-Menu {
-  clear: both;
-  float: right;
   text-align: left;
   padding: 5px;
+  float: right;
+  vertical-align: bottom;
 }
 
 #config_table td {
@@ -37,7 +42,4 @@
 
 #generic_table th {
   text-align: center;
-}
-
-#Device_Info table, #Device_Info tr, #Device_Info td {
 }

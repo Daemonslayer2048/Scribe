@@ -15,6 +15,7 @@
       <li><a href="{{ url_for('groups') }}">Groups</a></li>
     </ul>
   </head>
+  <section class="container">
     <div class="Device_Info">
       <table id="generic_table" name=Device_Info>
         <tr><th>Device Info</th></tr>
@@ -32,6 +33,7 @@
       {% endfor %}
     </select>
   </div>
+</section>
   <div class="Config-Box">
     <table id="config_table">
       {% for line in config %}
