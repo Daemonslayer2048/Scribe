@@ -1,0 +1,2 @@
+FLASK_APP=Scribe.py
+FLASK_DEBUG=1

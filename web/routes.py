@@ -1,12 +1,10 @@
 #! python3
+from web import app
 import api
 import db
 import flask
 import os
-import connexion
 
-app = connexion.App(__name__, specification_dir="./api")
-app.add_api("swagger.yaml")
 
 #############
 # Home URLs #
@@ -72,10 +70,3 @@ def config(alias):
     repo = api.repos.get_device_repo(alias)
     model = api.models.get_devices_model(alias)
     return flask.render_template("config.html", repo=repo, model=model, alias=alias, config=config, logs=logs)
-
-
-if __name__ == "__main__":
-    if not os.path.exists("./Scribe.db"):
-        print("Building Database")
-        db.build_db()
-    app.run()

@@ -102,12 +102,12 @@ def add(node):
 def get_config(alias):
     query = """
     SELECT
-	   repos.repo_name as repo
+        repos.repo_name as repo
     FROM
-	   devices
+        devices
     INNER JOIN repos ON devices.repo = repos.repo_name
     WHERE
-	   alias = (?)
+        alias = (?)
     """
     repo = db.get_query(query, (str(alias),))[0]["repo"]
     file = "./Repositories/" + repo + "/" + alias + ".cfg"

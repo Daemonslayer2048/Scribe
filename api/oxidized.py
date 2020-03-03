@@ -4,13 +4,13 @@ import db
 def fetch(ip):
     query = """
     SELECT
-	   devices.alias as alias,
-	   repos.repo_name as repo
+        devices.alias as alias,
+        repos.repo_name as repo
     FROM
-	   devices
+        devices
     INNER JOIN repos ON devices.repo = repos.repo_name
     WHERE
-	   ip = (?)
+        ip = (?)
     """
     device = db.get_query(query, (ip,))[0]
     file = "./Repositories/" + device["repo"] + "/" + device["alias"] + ".cfg"

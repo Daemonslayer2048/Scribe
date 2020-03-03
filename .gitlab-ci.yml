@@ -14,7 +14,7 @@ Build:
   script:
     - source ./env/bin/activate
     # Start Webapp (db should be built on start up)
-    - python3 ./web_app.py &
+    - flask run &
     # Test API endpoints
     - sleep 30
     # Add a model
