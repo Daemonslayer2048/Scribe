@@ -17,7 +17,7 @@ paths:
 ###################################################
   /device:
     post:
-      x-swagger-router-controller: api.devices
+      x-swagger-router-controller: Scribe.api.devices
       operationId: "add"
       tags:
         - "Devices"
@@ -63,7 +63,7 @@ paths:
 
   /device/{alias}:
     delete:
-      x-swagger-router-controller: api.devices
+      x-swagger-router-controller: Scribe.api.devices
       operationId: "delete"
       tags:
         - "Devices"
@@ -83,7 +83,7 @@ paths:
 
   /device/purge/{alias}:
     delete:
-      x-swagger-router-controller: api.devices
+      x-swagger-router-controller: Scribe.api.devices
       operationId: "purge"
       tags:
         - "Devices"
@@ -103,7 +103,7 @@ paths:
 
   /device/disable/{alias}:
     put:
-      x-swagger-router-controller: api.devices
+      x-swagger-router-controller: Scribe.api.devices
       operationId: "disable"
       tags:
         - "Devices"
@@ -120,7 +120,7 @@ paths:
 
   /device/enable/{alias}:
     put:
-      x-swagger-router-controller: api.devices
+      x-swagger-router-controller: Scribe.api.devices
       operationId: "enable"
       tags:
         - "Devices"
@@ -137,7 +137,7 @@ paths:
 
   /device/config/{alias}:
     get:
-      x-swagger-router-controller: api.devices
+      x-swagger-router-controller: Scribe.api.devices
       operationId: "get_config"
       tags:
         - "Devices"
@@ -159,7 +159,7 @@ paths:
 
   /device/config/{alias}/{hash}:
     get:
-      x-swagger-router-controller: api.git
+      x-swagger-router-controller: Scribe.api.git
       operationId: "get_config_at_hash"
       tags:
         - "Devices"
@@ -186,7 +186,7 @@ paths:
 
   /devices:
     get:
-      x-swagger-router-controller: api.devices
+      x-swagger-router-controller: Scribe.api.devices
       operationId: "get"
       tags:
         - "Devices"
@@ -215,7 +215,7 @@ paths:
 ###################################################
   /nodes:
     get:
-      x-swagger-router-controller: api.oxidized
+      x-swagger-router-controller: Scribe.api.oxidized
       operationId: "get"
       tags:
         - "Oxidized Compatible"
@@ -241,7 +241,7 @@ paths:
 
   /node/fetch/{ip}:
     get:
-      x-swagger-router-controller: api.oxidized
+      x-swagger-router-controller: Scribe.api.oxidized
       operationId: "fetch"
       tags:
         - "Oxidized Compatible"
@@ -267,7 +267,7 @@ paths:
 
   /users:
     get:
-      x-swagger-router-controller: api.users
+      x-swagger-router-controller: Scribe.api.users
       operationId: "get"
       tags:
         - "Users"
@@ -290,7 +290,7 @@ paths:
         required: true
         description: The user name
     post:
-      x-swagger-router-controller: api.users
+      x-swagger-router-controller: Scribe.api.users
       operationId: "add"
       tags:
         - "Users"
@@ -301,7 +301,7 @@ paths:
         406:
           description: user already exists in Scribe db
     delete:
-      x-swagger-router-controller: api.users
+      x-swagger-router-controller: Scribe.api.users
       operationId: "delete"
       tags:
         - "Users"
@@ -316,7 +316,7 @@ paths:
 
   /groups:
     get:
-      x-swagger-router-controller: api.groups
+      x-swagger-router-controller: Scribe.api.groups
       operationId: "get"
       tags:
         - "Groups"
@@ -339,7 +339,7 @@ paths:
         required: true
         description: The group name
     post:
-      x-swagger-router-controller: api.groups
+      x-swagger-router-controller: Scribe.api.groups
       operationId: "add"
       tags:
         - "Groups"
@@ -350,7 +350,7 @@ paths:
         406:
           description: group already exists in Scribe db
     delete:
-      x-swagger-router-controller: api.groups
+      x-swagger-router-controller: Scribe.api.groups
       operationId: "delete"
       tags:
         - "Groups"
@@ -365,7 +365,7 @@ paths:
 
   /models:
     get:
-      x-swagger-router-controller: api.models
+      x-swagger-router-controller: Scribe.api.models
       operationId: "get"
       tags:
         - "Models"
@@ -389,7 +389,7 @@ paths:
 
   /model/:
     post:
-      x-swagger-router-controller: api.models
+      x-swagger-router-controller: Scribe.api.models
       operationId: "add"
       tags:
         - "Models"
@@ -414,7 +414,7 @@ paths:
 
   /model/{pk}:
     delete:
-      x-swagger-router-controller: api.models
+      x-swagger-router-controller: Scribe.api.models
       operationId: "delete"
       tags:
         - "Models"
@@ -437,7 +437,7 @@ paths:
         required: true
         description: Alias of device
     get:
-      x-swagger-router-controller: api.models
+      x-swagger-router-controller: Scribe.api.models
       operationId: "get_devices_model"
       tags:
         - "Models"
@@ -461,7 +461,7 @@ paths:
 ###################################################
   /repos/:
     get:
-      x-swagger-router-controller: api.repos
+      x-swagger-router-controller: Scribe.api.repos
       operationId: "get"
       tags:
         - "Repos"
@@ -478,7 +478,7 @@ paths:
 
   /repo/:
     post:
-      x-swagger-router-controller: api.repos
+      x-swagger-router-controller: Scribe.api.repos
       operationId: "add"
       tags:
         - "Repos"
@@ -501,7 +501,7 @@ paths:
 
   /repo/{repo_name}:
     delete:
-      x-swagger-router-controller: api.repos
+      x-swagger-router-controller: Scribe.api.repos
       operationId: "delete"
       tags:
         - "Repos"
@@ -525,7 +525,7 @@ paths:
         required: true
         description: The device alias
     get:
-      x-swagger-router-controller: api.repos
+      x-swagger-router-controller: Scribe.api.repos
       operationId: "get_device_repo"
       tags:
         - "Repos"
@@ -548,7 +548,7 @@ paths:
         required: true
         description: The device alias
     get:
-      x-swagger-router-controller: api.git
+      x-swagger-router-controller: Scribe.api.git
       operationId: "get_device_git_log"
       tags:
         - "Repos"
@@ -568,7 +568,7 @@ paths:
 ###################################################
   /web_api/config/{alias}/{hash}:
     get:
-      x-swagger-router-controller: api.web
+      x-swagger-router-controller: Scribe.api.web
       operationId: "get_config_at_hash"
       tags:
         - "Front End API"

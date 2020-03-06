@@ -1,5 +1,5 @@
 from flask import abort
-import db
+from Scribe import db
 
 def fetch(ip):
     query = """

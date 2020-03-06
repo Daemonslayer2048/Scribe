@@ -1,6 +1,6 @@
 from flask import abort
 from sh import git
-from api import repos
+from . import repos
 import os
 
 def get_git_log(repo, config_file):

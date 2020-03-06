@@ -1,5 +1,5 @@
-from web import app
-import db
+from Scribe.web import app
+from . import db
 import os
 
 if __name__ == "__main__":

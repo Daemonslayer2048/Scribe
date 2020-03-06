@@ -1,4 +1,4 @@
-import db
+from Scribe import db
 
 def get_repos():
     cur = db.get_db_connection().cursor()

@@ -1,7 +1,7 @@
 #! python3
-from web import app
-import api
-import db
+from . import app
+from Scribe import api
+from Scribe import db
 import flask
 import os
 
