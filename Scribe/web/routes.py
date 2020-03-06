@@ -2,6 +2,7 @@
 from . import app
 from Scribe import api
 from Scribe import db
+from .forms import LoginForm
 import flask
 import os
 
@@ -9,6 +10,15 @@ import os
 #############
 # Home URLs #
 #############
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        flask.flash('Login requested for user {}, remember_me={}'.format(
+            form.username.data, form.remember_me.data))
+        return flask.redirect(flask.url_for('home'))
+    return flask.render_template('login.html', title='Sign In', form=form)
+
 @app.route("/web")
 def home():
     devices = api.devices.get()
