@@ -18,20 +18,10 @@ class device(db.Model):
     def __repr__(self):
         return '<device {}>'.format(self.username)
 
-class remote_repo(db.Model):
-    __tablename__ = "remote_repos"
-    pk = db.Column(db.Integer, primary_key=True)
-    repo_name = db.Column(db.String(120), nullable=False)
-    url = db.Column(db.String(512), nullable=False, unique=True)
-
-    def __repr__(self):
-        return '<Remote_Repo {}>'.format(self.username)
-
 class repo(db.Model):
     __tablename__ = "repos"
     pk = db.Column(db.Integer, primary_key=True)
     repo_name = db.Column(db.String(120), nullable=False, unique=True)
-    remote_repo = db.Column(db.Integer, db.ForeignKey('remote_repos.pk'), nullable=True)
 
     def __repr__(self):
         return '<Repo {}>'.format(self.username)
