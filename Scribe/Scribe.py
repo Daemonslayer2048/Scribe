@@ -1,5 +1,5 @@
 from Scribe.web import app
-from . import db
+from . import sqlite_db as db
 import os
 
 if __name__ == "__main__":

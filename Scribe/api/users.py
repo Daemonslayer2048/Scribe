@@ -1,4 +1,4 @@
-from Scribe import db
+from Scribe import sqlite_db as db
 
 def get_users():
     cur = db.get_db_connection().cursor()

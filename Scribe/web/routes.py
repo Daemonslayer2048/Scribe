@@ -1,7 +1,7 @@
 #! python3
 from . import app
 from Scribe import api
-from Scribe import db
+from Scribe.web import db
 from .forms import LoginForm
 import flask
 import os

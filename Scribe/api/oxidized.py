@@ -1,5 +1,5 @@
 from flask import abort
-from Scribe import db
+from Scribe import sqlite_db as db
 
 def fetch(ip):
     query = """
