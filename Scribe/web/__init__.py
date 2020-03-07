@@ -17,7 +17,9 @@ def create_app():
     with app.app_context():
         from .groups import group_routes
         from .device_models import device_model_routes
+        from .users import user_routes
 
         app.register_blueprint(group_routes.groups_bp)
         app.register_blueprint(device_model_routes.device_model_bp)
+        app.register_blueprint(user_routes.user_bp)
     return app
