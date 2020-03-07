@@ -1,6 +1,6 @@
-from web import db
-from web.models import *
-from shared import repos
+from . import db
+from .models import *
+from . import repos
 import os
 from sh import git
 

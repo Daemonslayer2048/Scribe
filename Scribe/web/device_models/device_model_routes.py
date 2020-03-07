@@ -4,6 +4,6 @@ from . import db
 from . import Device_model
 
 @device_model_bp.route("/")
-def device_models():
+def home():
     models = Device_model.query.all()
     return flask.render_template("device_model.html", models=models)

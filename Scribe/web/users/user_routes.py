@@ -4,6 +4,6 @@ from . import db
 from . import User
 
 @user_bp.route("/")
-def users():
+def home():
     users = User.query.all()
     return flask.render_template("users.html", users=users)

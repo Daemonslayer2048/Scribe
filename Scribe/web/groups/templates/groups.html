@@ -1,3 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Devices - Scribe</title>
+    <script src="{{ url_for('static', filename='js/home.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <ul>
+      <li><a href="{{ url_for('home_bp.home') }}">Home</a></li>
+      <li><a href="{{ url_for('repo_bp.home') }}">Repositories</a></li>
+      <li><a href="{{ url_for('device_model_bp.home') }}">Models</a></li>
+      <li><a href="{{ url_for('user_bp.home') }}">Users</a></li>
+      <li><a class="current" href="{{ url_for('group_bp.home') }}">Groups</a></li>
+    </ul>
 <table id="generic_table">
   <tr>
     <th>Name</th>

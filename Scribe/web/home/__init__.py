@@ -1,5 +1,6 @@
 from flask import Blueprint
-from ..models import *
+from ..models import Device, Repo, Device_model
+from ..forms import LoginForm
 from .. import db
 
 home_bp = Blueprint('home_bp', __name__,

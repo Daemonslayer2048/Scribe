@@ -6,11 +6,11 @@
     <script src="{{ url_for('static', filename='js/home.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
     <ul>
-      <li><a class="current" href="{{ url_for('web_home') }}">Home</a></li>
-      <li><a href="{{ url_for('web_repos') }}">Repositories</a></li>
-      <li><a href="{{ url_for('web_models') }}">Models</a></li>
-      <li><a href="{{ url_for('web_users') }}">Users</a></li>
-      <li><a href="{{ url_for('web_groups') }}">Groups</a></li>
+      <li><a class="current" href="{{ url_for('home_bp.home') }}">Home</a></li>
+      <li><a href="{{ url_for('repo_bp.home') }}">Repositories</a></li>
+      <li><a href="{{ url_for('device_model_bp.home') }}">Models</a></li>
+      <li><a href="{{ url_for('user_bp.home') }}">Users</a></li>
+      <li><a href="{{ url_for('group_bp.home') }}">Groups</a></li>
     </ul>
   <table id="generic_table">
     <tr>
@@ -23,7 +23,7 @@
     </tr>
     {% for device in devices %}
     <tr>
-      <td><a href={{ url_for('web_config', alias=device.Device.alias) }}>{{ device.Device.alias }}</a></td>
+      <td><a href={{ url_for('device_bp.config', alias=device.Device.alias) }}>{{ device.Device.alias }}</a></td>
       <td>{% if device.Device.enabled == "1" %}
           <div onclick="DisableDevice('{{ request.host_url }}', '{{ device.Device.alias }}')" class="color-dot" style="background-color: #33cc33;"></div>
         </button>
@@ -31,7 +31,7 @@
           <div onclick="EnableDevice('{{ request.host_url }}', '{{ device.Device.alias }}')" class="color-dot" style="background-color: #ff3300"></div>
       {% endif %} </td>
       <td>{{ device.Device.ip }}</td>
-      <td><a href={{ url_for('web_repo_devices', repo=device.Repo.repo_name) }}>{{ device.Repo.repo_name }}</a></td>
+      <td><a href={{ url_for('repo_bp.web_repo_devices', repo=device.Repo.repo_name) }}>{{ device.Repo.repo_name }}</a></td>
       <td>{{ device.Device_model.model }}</td>
       <td>{{ device.Device.last_updated }}</td>
     </tr>

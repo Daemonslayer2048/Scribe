@@ -4,7 +4,7 @@ from . import db
 from . import Repo, Device, Device_model
 
 @repo_bp.route("/")
-def repos():
+def home():
     repos = Repo.query.all()
     return flask.render_template("repos.html", repos=repos)
 
