@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Repos - Scribe</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <ul>
+      <li><a href="{{ url_for('home') }}">Home</a></li>
+      <li><a class="current" href="{{ url_for('repos') }}">Repositories</a></li>
+      <li><a href="{{ url_for('models') }}">Models</a></li>
+      <li><a href="{{ url_for('users') }}">Users</a></li>
+      <li><a href="{{ url_for('groups') }}">Groups</a></li>
+    </ul>
+  </head>
+  <table id="generic_table">
+    <tr>
+      <th>Device Alias</th>
+      <th>IP Addres</th>
+      <th>Model</th>
+    </tr>
+    {% for device in devices %}
+    <tr>
+      <td> {{ device.alias }} </td>
+      <td> {{ device.ip }} </td>
+      <td> {{ device.model }} </td>
+    </tr>
+    {% endfor %}

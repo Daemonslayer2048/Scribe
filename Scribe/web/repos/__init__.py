@@ -1,8 +1,8 @@
 from flask import Blueprint
-from ..models import *
+from ..models import Repo, Device, Device_model
 from .. import db
 
-repos_bp = Blueprint('repos_bp', __name__,
+repo_bp = Blueprint('repo_bp', __name__,
                      template_folder='templates',
                      static_folder='static',
                      url_prefix='/web/repos')

@@ -1,0 +1,13 @@
+  <table id="generic_table">
+    <tr>
+      <th>Device Alias</th>
+      <th>IP Addres</th>
+      <th>Model</th>
+    </tr>
+    {% for device in devices %}
+    <tr>
+      <td> {{ device.alias }} </td>
+      <td> {{ device.ip }} </td>
+      <td> {{ device.model }} </td>
+    </tr>
+    {% endfor %}
