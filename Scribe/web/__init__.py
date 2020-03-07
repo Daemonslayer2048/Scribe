@@ -19,7 +19,7 @@ def create_app():
         from .device_models import device_model_routes
         from .users import user_routes
 
-        app.register_blueprint(group_routes.groups_bp)
+        app.register_blueprint(group_routes.group_bp)
         app.register_blueprint(device_model_routes.device_model_bp)
         app.register_blueprint(user_routes.user_bp)
     return app

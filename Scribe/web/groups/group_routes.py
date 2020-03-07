@@ -1,9 +1,9 @@
 import flask
-from . import groups_bp
+from . import group_bp
 from . import db
 from . import Group
 
-@groups_bp.route("/")
+@group_bp.route("/")
 def web_groups():
     groups = Group.query.all()
     print(str(groups))
