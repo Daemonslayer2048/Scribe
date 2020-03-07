@@ -1,8 +1,10 @@
 #! python3
-from . import app
-from Scribe import api
+from flask_login import current_user, login_user, logout_user, login_required
+from Scribe.shared import devices, git, repos, models
+from Scribe.web.models import User, Group, Device_model, Repo, Device
+from Scribe.web import app
 from Scribe.web import db
-from .forms import LoginForm
+from Scribe.web.forms import LoginForm
 import flask
 import os
 
@@ -11,19 +13,31 @@ import os
 # Home URLs #
 #############
 @app.route('/login', methods=['GET', 'POST'])
-def login():
+def web_login():
+    if current_user.is_authenticated:
+        return flask.redirect(flask.url_for('web_home'))
     form = LoginForm()
     if form.validate_on_submit():
-        flask.flash('Login requested for user {}, remember_me={}'.format(
-            form.username.data, form.remember_me.data))
-        return flask.redirect(flask.url_for('home'))
+        user = User.query.filter_by(username=form.username.data).first()
+        if user is None or not user.check_password(form.password.data):
+            flask.flash('Invalid username or password')
+            return flask.redirect(flask.url_for('web_login'))
+        login_user(user, remember=form.remember_me.data)
+        return flask.redirect(flask.url_for('web_home'))
     return flask.render_template('login.html', title='Sign In', form=form)
 
+@app.route('/logout')
+def web_logout():
+    logout_user()
+    return flask.redirect(flask.url_for('index'))
+
 @app.route("/web")
-def home():
-    devices = api.devices.get()
-    for device in devices:
-        device.update({"model": api.models.get_devices_model(device["alias"])["model"]})
+@login_required
+def web_home():
+    devices = (db.session.query(Device, Repo, Device_model)
+        .filter(Device.repo == Repo.repo_name)
+        .filter(Device.model == Device_model.id)
+        .all())
     return flask.render_template("home.html", devices=devices)
 
 
@@ -31,17 +45,18 @@ def home():
 # Users URLs  #
 ###############
 @app.route("/web/users")
-def users():
-    users = api.users.get()
+@login_required
+def web_users():
+    users = User.query.all()
     return flask.render_template("users.html", users=users)
-
 
 ###############
 # Groups URLs #
 ###############
 @app.route("/web/groups")
-def groups():
-    groups = api.groups.get()
+@login_required
+def web_groups():
+    groups = Group.query.all()
     return flask.render_template("groups.html", groups=groups)
 
 
@@ -49,8 +64,9 @@ def groups():
 # Models URLs #
 ###############
 @app.route("/web/models")
-def models():
-    models = api.models.get()
+@login_required
+def web_models():
+    models = Device_model.query.all()
     return flask.render_template("models.html", models=models)
 
 
@@ -58,14 +74,20 @@ def models():
 # Repos URLs #
 ##############
 @app.route("/web/repos")
-def repos():
-    repos = api.repos.get()
+@login_required
+def web_repos():
+    repos = Repo.query.all()
     return flask.render_template("repos.html", repos=repos)
 
 
 @app.route("/web/repos/<repo>")
-def repo_devices(repo):
-    devices = api.repos.get_repo_devices(repo)
+@login_required
+def web_repo_devices(repo):
+    devices = (db.session.query(Repo, Device, Device_model)
+        .filter(Device.repo == Repo.repo_name)
+        .filter(Device.model == Device_model.id)
+        .filter(Repo.repo_name == str(repo))
+        .all())
     return flask.render_template("repo.html", devices=devices)
 
 
@@ -73,10 +95,11 @@ def repo_devices(repo):
 # Other URLS #
 ##############
 @app.route("/web/config/<alias>")
-def config(alias):
-    config = str(api.devices.get_config(str(alias)))
-    config = config.split("\n")
-    logs = api.git.get_device_git_log(alias)
-    repo = api.repos.get_device_repo(alias)
-    model = api.models.get_devices_model(alias)
-    return flask.render_template("config.html", repo=repo, model=model, alias=alias, config=config, logs=logs)
+@login_required
+def web_config(alias):
+        config = str(devices.get_config(str(alias)))
+        config = config.split("\n")
+        logs = git.get_device_git_log(alias)
+        repo = repos.get_device_repo(alias)
+        model = models.get_devices_model(alias)
+        return flask.render_template("config.html", repo=repo, model=model, alias=alias, config=config, logs=logs)

@@ -1,7 +1,6 @@
 #! python3
 from datetime import datetime
 from device_lib import *
-from api import *
 import argparse
 import db
 

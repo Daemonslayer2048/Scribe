@@ -8,26 +8,26 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/configs.css') }}">
     <ul>
-      <li><a href="{{ url_for('home') }}">Home</a></li>
-      <li><a href="{{ url_for('repos') }}">Repositories</a></li>
-      <li><a href="{{ url_for('models') }}">Models</a></li>
-      <li><a href="{{ url_for('users') }}">Users</a></li>
-      <li><a href="{{ url_for('groups') }}">Groups</a></li>
+      <li><a href="{{ url_for('web_home') }}">Home</a></li>
+      <li><a href="{{ url_for('web_repos') }}">Repositories</a></li>
+      <li><a href="{{ url_for('web_models') }}">Models</a></li>
+      <li><a href="{{ url_for('web_users') }}">Users</a></li>
+      <li><a href="{{ url_for('web_groups') }}">Groups</a></li>
     </ul>
   </head>
   <section class="container">
     <div class="Device_Info">
       <table id="generic_table" name=Device_Info>
         <tr><th>Device Info</th></tr>
-        <tr><td>Repository Name:       {{ repo.repo }}</td></tr>
-        <tr><td>Device Manufacturer:  {{ model.manufacturer }}</td></tr>
-        <tr><td>Device Model:             {{ model.model }}</td></tr>
-        <tr><td>Device OS:                  {{ model.OS }}</td></tr>
+        <tr><td>Repository Name:       {{ repo.Repo.repo_name }}</td></tr>
+        <tr><td>Device Manufacturer:  {{ model.Device_model.manufacturer }}</td></tr>
+        <tr><td>Device Model:             {{ model.Device_model.model }}</td></tr>
+        <tr><td>Device OS:                  {{ model.Device_model.os }}</td></tr>
       </table>
     </div>
     <div class="Config-Menu">
     <label>Config Version</label>
-    <select name="Configs" id="Configs" data-api="{{ url_for('home', _external=True) }}" data-device="{{ alias }}">
+    <select name="Configs" id="Configs" data-api="{{ url_for('web_home', _external=True) }}" data-device="{{ alias }}">
       {% for log in logs %}
         <option value="{{ log.Hash }}"> {{ log.Date }} </option>
       {% endfor %}

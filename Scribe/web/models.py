@@ -1,12 +1,15 @@
-from . import db
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
+from Scribe.web import db
+from Scribe.web import login
 
-class device(db.Model):
+class Device(db.Model):
     __tablename__ = "devices"
-    pk = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     ip = db.Column(db.String(15), unique=True, nullable=False)
-    port = db.Column(db.Integer, unique=True, nullable=False, default=22)
+    port = db.Column(db.Integer, nullable=False, default=22)
     alias = db.Column(db.String(120), nullable=False)
-    model = db.Column(db.String(120), db.ForeignKey('device_models.pk'), nullable=False)
+    model = db.Column(db.String(120), db.ForeignKey('device_models.id'), nullable=False)
     user = db.Column(db.String(120), nullable=False)
     password = db.Column(db.String(120), nullable=False)
     enable = db.Column(db.String(120), nullable=True)
@@ -16,29 +19,29 @@ class device(db.Model):
     proxy = db.Column(db.String(120), db.ForeignKey('proxies.alias'), nullable=True)
 
     def __repr__(self):
-        return '<device {}>'.format(self.username)
+        return '<Device {}>'.format(self.alias)
 
-class repo(db.Model):
+class Repo(db.Model):
     __tablename__ = "repos"
-    pk = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     repo_name = db.Column(db.String(120), nullable=False, unique=True)
 
     def __repr__(self):
-        return '<Repo {}>'.format(self.username)
+        return '<Repo {}>'.format(self.repo_name)
 
-class device_model(db.Model):
+class Device_model(db.Model):
     __tablename__ = "device_models"
-    pk = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     manufacturer = db.Column(db.String(120), nullable=False)
     model = db.Column(db.String(120), nullable=False)
     os = db.Column(db.String(120), nullable=False)
 
     def __repr__(self):
-        return '<Device_Model {}>'.format(self.username)
+        return '<Device_Model {}>'.format(self.id)
 
-class proxy(db.Model):
+class Proxy(db.Model):
     __tablename__ = "proxies"
-    pk = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     alias = db.Column(db.String(120), nullable=False, unique=True)
     ip = db.Column(db.String(15), nullable=False)
     port = db.Column(db.Integer, nullable=False, default=22)
@@ -46,33 +49,43 @@ class proxy(db.Model):
     password = db.Column(db.String(128), nullable=False)
 
     def __repr__(self):
-        return '<Proxy {}>'.format(self.username)
+        return '<Proxy {}>'.format(self.alias)
 
-class user(db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = "users"
-    pk = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True, nullable=False)
     email = db.Column(db.String(120), index=True, unique=True, nullable=False)
     group = db.Column(db.String(64), db.ForeignKey('groups.groupname'))
     password_hash = db.Column(db.String(128), unique=True, nullable=False)
 
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
-class group(db.Model):
+class Group(db.Model):
     __tablename__ = "groups"
-    pk = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     groupname = db.Column(db.String(64), unique=True, nullable=False)
 
     def __repr__(self):
-        return '<Group {}>'.format(self.username)
+        return '<Group {}>'.format(self.groupname)
 
-class device_associations(db.Model):
+class Device_associations(db.Model):
     __tablename__ = "device_associations"
-    pk = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     device = db.Column(db.String(120), db.ForeignKey('devices.alias'))
     user = db.Column(db.String(64), db.ForeignKey('users.username'))
     group = db.Column(db.String(64), db.ForeignKey('groups.groupname'))
 
     def __repr__(self):
         return '<Device_Associations {}>'.format(self.username)
+
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
