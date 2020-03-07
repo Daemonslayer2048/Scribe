@@ -1,10 +1,10 @@
 #! python3
-from flask_login import current_user, login_user, logout_user, login_required
-from Scribe.shared import devices, git, repos, models
-from Scribe.web.models import User, Group, Device_model, Repo, Device
-from Scribe.web import app
-from Scribe.web import db
-from Scribe.web.forms import LoginForm
+#from flask_login import current_user, login_user, logout_user, login_required
+from shared import devices, git, repos, models
+from web.models import User, Group, Device_model, Repo, Device
+from web import app
+from web import db
+from web.forms import LoginForm
 import flask
 import os
 

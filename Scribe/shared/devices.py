@@ -1,5 +1,5 @@
-from Scribe.web import db
-from Scribe.web.models import *
+from web import db
+from web.models import *
 
 def get_config(alias):
     repo = (db.session.query(Repo, Device)

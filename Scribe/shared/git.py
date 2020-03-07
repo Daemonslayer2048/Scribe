@@ -1,6 +1,6 @@
-from Scribe.web import db
-from Scribe.web.models import *
-from Scribe.shared import repos
+from web import db
+from web.models import *
+from shared import repos
 import os
 from sh import git
 

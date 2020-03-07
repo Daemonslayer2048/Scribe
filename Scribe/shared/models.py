@@ -1,5 +1,5 @@
-from Scribe.web import db
-from Scribe.web.models import *
+from web import db
+from web.models import *
 
 def get_devices_model(alias):
     model = (db.session.query(Device, Device_model)

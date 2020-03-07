@@ -1,0 +1,14 @@
+
+<table id="generic_table">
+  <tr>
+    <th>Manufacturer</th>
+    <th>Model</th>
+    <th>Operating System</th>
+  </tr>
+  {% for model in models %}
+  <tr>
+    <td>{{ model.manufacturer }}</a></td>
+    <td>{{ model.model }}</a></td>
+    <td>{{ model.os }}</a></td>
+  </tr>
+  {% endfor %}

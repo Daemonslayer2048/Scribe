@@ -1,10 +1,6 @@
-from Scribe.web import app
-import os
+from web import create_app
+
+app = create_app()
 
 if __name__ == "__main__":
-    app.run()
-else:
-    if not os.path.exists("./Scribe.db"):
-        print(" * Building Database")
-        print(" * Database built")
-    print(" * Database exists")
+    app.run(host='0.0.0.0', debug=True)
