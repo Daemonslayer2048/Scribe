@@ -1,7 +1,7 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from . import db
-#from . import login
+from . import login
 
 class Device(db.Model):
     __tablename__ = "devices"
@@ -86,6 +86,6 @@ class Device_associations(db.Model):
     def __repr__(self):
         return '<Device_Associations {}>'.format(self.username)
 
-#@login.user_loader
-#def load_user(id):
-#    return User.query.get(int(id))
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))

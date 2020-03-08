@@ -1,5 +1,5 @@
 from flask import Blueprint
-from ..models import Device, Repo, Device_model
+from ..models import Device, Repo, Device_model, User
 from ..forms import LoginForm
 from .. import db
 

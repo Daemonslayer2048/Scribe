@@ -1,9 +1,11 @@
+from flask_login import current_user, login_user, logout_user, login_required
 from ..shared import git, repos, models, devices
 from . import device_bp
 from . import db
 import flask
 
 @device_bp.route("/config/<alias>")
+@login_required
 def config(alias):
         config = str(devices.get_config(str(alias)))
         config = config.split("\n")
