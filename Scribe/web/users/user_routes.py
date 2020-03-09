@@ -4,6 +4,7 @@ from . import user_bp
 from . import db
 from . import User
 
+
 @user_bp.route("/")
 @login_required
 def home():

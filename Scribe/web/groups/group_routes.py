@@ -4,6 +4,7 @@ from . import group_bp
 from . import db
 from . import Group
 
+
 @group_bp.route("/")
 @login_required
 def home():

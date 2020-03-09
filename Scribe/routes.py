@@ -1,5 +1,5 @@
 #! python3
-#from flask_login import current_user, login_user, logout_user, login_required
+# from flask_login import current_user, login_user, logout_user, login_required
 from shared import devices, git, repos, models
 from web.models import User, Group, Device_model, Repo, Device
 from web import app
@@ -12,32 +12,36 @@ import os
 #############
 # Home URLs #
 #############
-@app.route('/login', methods=['GET', 'POST'])
+@app.route("/login", methods=["GET", "POST"])
 def web_login():
     if current_user.is_authenticated:
-        return flask.redirect(flask.url_for('web_home'))
+        return flask.redirect(flask.url_for("web_home"))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
-            flask.flash('Invalid username or password')
-            return flask.redirect(flask.url_for('web_login'))
+            flask.flash("Invalid username or password")
+            return flask.redirect(flask.url_for("web_login"))
         login_user(user, remember=form.remember_me.data)
-        return flask.redirect(flask.url_for('web_home'))
-    return flask.render_template('login.html', title='Sign In', form=form)
+        return flask.redirect(flask.url_for("web_home"))
+    return flask.render_template("login.html", title="Sign In", form=form)
 
-@app.route('/logout')
+
+@app.route("/logout")
 def web_logout():
     logout_user()
-    return flask.redirect(flask.url_for('index'))
+    return flask.redirect(flask.url_for("index"))
+
 
 @app.route("/web")
 @login_required
 def web_home():
-    devices = (db.session.query(Device, Repo, Device_model)
+    devices = (
+        db.session.query(Device, Repo, Device_model)
         .filter(Device.repo == Repo.repo_name)
         .filter(Device.model == Device_model.id)
-        .all())
+        .all()
+    )
     return flask.render_template("home.html", devices=devices)
 
 
@@ -49,6 +53,7 @@ def web_home():
 def web_users():
     users = User.query.all()
     return flask.render_template("users.html", users=users)
+
 
 ###############
 # Groups URLs #
@@ -83,11 +88,13 @@ def web_repos():
 @app.route("/web/repos/<repo>")
 @login_required
 def web_repo_devices(repo):
-    devices = (db.session.query(Repo, Device, Device_model)
+    devices = (
+        db.session.query(Repo, Device, Device_model)
         .filter(Device.repo == Repo.repo_name)
         .filter(Device.model == Device_model.id)
         .filter(Repo.repo_name == str(repo))
-        .all())
+        .all()
+    )
     return flask.render_template("repo.html", devices=devices)
 
 
@@ -97,9 +104,11 @@ def web_repo_devices(repo):
 @app.route("/web/config/<alias>")
 @login_required
 def web_config(alias):
-        config = str(devices.get_config(str(alias)))
-        config = config.split("\n")
-        logs = git.get_device_git_log(alias)
-        repo = repos.get_device_repo(alias)
-        model = models.get_devices_model(alias)
-        return flask.render_template("config.html", repo=repo, model=model, alias=alias, config=config, logs=logs)
+    config = str(devices.get_config(str(alias)))
+    config = config.split("\n")
+    logs = git.get_device_git_log(alias)
+    repo = repos.get_device_repo(alias)
+    model = models.get_devices_model(alias)
+    return flask.render_template(
+        "config.html", repo=repo, model=model, alias=alias, config=config, logs=logs
+    )

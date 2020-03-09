@@ -6,11 +6,11 @@ from flask_migrate import Migrate
 
 app = Flask(__name__, instance_relative_config=False)
 db = SQLAlchemy()
-app.config.from_object('config.Config')
+app.config.from_object("config.Config")
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
-login.login_view = 'home_bp.login'
+login.login_view = "home_bp.login"
 with app.app_context():
     from .groups import group_routes
     from .device_models import device_model_routes
@@ -19,6 +19,7 @@ with app.app_context():
     from .home import home_routes
     from .devices import device_routes
     from .api import api_routes
+
     app.register_blueprint(group_routes.group_bp)
     app.register_blueprint(device_model_routes.device_model_bp)
     app.register_blueprint(user_routes.user_bp)

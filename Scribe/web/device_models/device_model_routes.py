@@ -4,6 +4,7 @@ from . import device_model_bp
 from . import db
 from . import Device_model
 
+
 @device_model_bp.route("/")
 @login_required
 def home():
