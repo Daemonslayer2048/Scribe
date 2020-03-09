@@ -6,7 +6,7 @@ from flask import jsonify
 import flask
 import os
 from . import db
-from . import Device, Repo, Device_model, User
+from . import Device, Repo, Device_model, User, Group
 
 api_bp = Blueprint('api', __name__, url_prefix='/api')
 api = Api(api_bp, version='1.0', title='Scribe API',
@@ -153,8 +153,9 @@ class Device_config(Resource):
         except FileNotFoundError:
             return "A config for this device does not exist yet!"
 
+#Needs to be completed
 @devices_ns.route("/config/<string:alias>/<string:hash>")
-@devices_ns.doc(description="Get a devices most recent config")
+@devices_ns.doc(description="Get a devices most recent config (NOT DONE YET)")
 class Device_config(Resource):
     def get(Resource, alias):
         response = db.session.query(Device, Repo).filter(Device.repo == Repo.repo_name).first()
@@ -166,26 +167,100 @@ class Device_config(Resource):
         except FileNotFoundError:
             return "A config for this device does not exist yet!"
 
+@devices_ns.route("/<string:alias>")
+class Device_single(Resource):
+    @devices_ns.doc(description="Get all devices")
+    def get(Resource, alias):
+        response = (db.session.query(Device, Repo, Device_model)
+            .filter(Device.repo == Repo.repo_name)
+            .filter(Device.model == Device_model.id)
+            .filter(Device.alias == alias)
+            .first())
+        device = {}
+        device['ip'] = response.Device.ip
+        device['port'] = response.Device.port
+        device['alias'] = response.Device.alias
+        device['last_updated'] = response.Device.last_updated
+        device['enabled'] = response.Device.enabled
+        device['manufacturer'] = response.Device_model.manufacturer
+        device['model'] = response.Device_model.model
+        device['repo'] = response.Repo.repo_name
+        return jsonify(device)
 
 ###################################################
 #               Oxidized Compatible               #
 ###################################################
+oxidized_ns = api.namespace('oxidized', description='Oxidized Compatible API endpoints')
+@oxidized_ns.route("/nodes")
+class Oxidized_Nodes(Resource):
+    def get(Resource):
+        return "Not done"
 
-###################################################
-#                     Users                       #
-###################################################
+@oxidized_ns.route("/node/fetch/<string:ip>")
+class Oxidized_config(Resource):
+    def get(Resource, ip):
+        return "Not done"
 
 ###################################################
 #                     Groups                       #
 ###################################################
+groups_ns = api.namespace('groups', description='User Operations')
+@groups_ns.route("")
+class Groups(Resource):
+    def get(Resource):
+        groups = []
+        response = Group.query.all()
+        for row in response:
+            group = {}
+            group['groupname'] = row.groupname
+            groups.append(group)
+        return jsonify(groups)
+
+@groups_ns.route("<string:group_name>")
+class Groups_ops(Resource):
+    def put(Resource, group_name):
+        group = Group(groupname=group_name)
+        db.session.add(group)
+        db.session.commit()
+        return str("Group %s added" % (group_name))
+    def delete(Resource, group_name):
+        Group.query.filter(Group.groupname == group_name).delete()
+        db.session.commit()
+        return str("Group %s added" % (group_name))
 
 ###################################################
 #                     Models                      #
 ###################################################
+models_ns = api.namespace('models', description='User Operations')
+@models_ns.route("")
+class Device_models(Resource):
+    def get(Resource):
+        models = []
+        response = Device_model.query.all()
+        for row in response:
+            model = {}
+            model['id'] = row.id
+            model['manufacturer'] = row.manufacturer
+            model['model'] = row.model
+            model['os'] = row.os
+            models.append(model)
+        return jsonify(models)
 
 ###################################################
 #                      Repos                      #
 ###################################################
+repos_ns = api.namespace('repos', description='User Operations')
+@repos_ns.route("")
+class Repos(Resource):
+    def get(Resource):
+        repos = []
+        response = Repo.query.all()
+        for row in response:
+            repo = {}
+            repo['id'] = row.id
+            repo['repo_name'] = row.repo_name
+            repos.append(repo)
+        return jsonify(repos)
 
 ###################################################
 #                      Users                      #
