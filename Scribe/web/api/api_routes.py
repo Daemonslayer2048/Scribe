@@ -255,7 +255,19 @@ class Oxidized_Nodes(Resource):
 @oxidized_ns.route("/node/fetch/<string:ip>")
 class Oxidized_config(Resource):
     def get(Resource, ip):
-        return "Not done"
+        response = (
+            db.session.query(Device, Repo, Device_model)
+            .filter(Device.repo == Repo.repo_name)
+            .filter(Device.model == Device_model.id)
+            .filter(Device.ip == ip)
+            .first()
+        )
+        file = "./Repositories/" + response.Repo.repo_name + "/" + response.Device.alias + ".cfg"
+        try:
+            config = open(file, "r").read()
+            return config
+        except FileNotFoundError:
+            return "Config not found", 500
 
 
 ###################################################
