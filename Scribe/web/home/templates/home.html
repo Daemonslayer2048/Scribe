@@ -24,7 +24,7 @@
     {% for device in devices %}
     <tr>
       <td><a href={{ url_for('device_bp.config', alias=device.Device.alias) }}>{{ device.Device.alias }}</a></td>
-      <td>{% if device.Device.enabled == "1" %}
+      <td>{% if device.Device.enabled == 1 %}
           <div onclick="DisableDevice('{{ request.host_url }}', '{{ device.Device.alias }}')" class="color-dot" style="background-color: #33cc33;"></div>
         </button>
       {% else %}

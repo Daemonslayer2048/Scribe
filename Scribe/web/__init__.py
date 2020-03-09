@@ -17,9 +17,11 @@ with app.app_context():
     from .repos import repo_routes
     from .home import home_routes
     from .devices import device_routes
+    from .api import api_routes
     app.register_blueprint(group_routes.group_bp)
     app.register_blueprint(device_model_routes.device_model_bp)
     app.register_blueprint(user_routes.user_bp)
     app.register_blueprint(repo_routes.repo_bp)
     app.register_blueprint(home_routes.home_bp)
     app.register_blueprint(device_routes.device_bp)
+    app.register_blueprint(api_routes.api_bp)

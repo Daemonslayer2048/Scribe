@@ -1,5 +1,5 @@
 function DisableDevice(url, device){
-  fetch(url + 'device/disable/' + device, {
+  fetch(url + 'api/devices/disable/' + device, {
     method: 'PUT',
     headers: {
       'Accept': 'application/json',
@@ -11,7 +11,7 @@ function DisableDevice(url, device){
 }
 
 function EnableDevice(url, device){
-  response = fetch(url + 'device/enable/' + device, {
+  response = fetch(url + 'api/devices/enable/' + device, {
     method: 'PUT',
     headers: {
       'Accept': 'application/json',
