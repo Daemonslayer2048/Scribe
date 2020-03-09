@@ -219,7 +219,7 @@ class Device_config(Resource):
 
 @devices_ns.route("/<string:alias>")
 class Device_single(Resource):
-    @devices_ns.doc(description="Get all devices")
+    @devices_ns.doc(description="Get a device")
     def get(Resource, alias):
         response = (
             db.session.query(Device, Repo, Device_model)
@@ -249,7 +249,25 @@ oxidized_ns = api.namespace("oxidized", description="Oxidized Compatible API end
 @oxidized_ns.route("/nodes")
 class Oxidized_Nodes(Resource):
     def get(Resource):
-        return "Not done"
+        devices = []
+        response = (
+            db.session.query(Device, Repo, Device_model)
+            .filter(Device.repo == Repo.repo_name)
+            .filter(Device.model == Device_model.id)
+            .all()
+        )
+        for row in response:
+            device = {}
+            device["ip"] = row.Device.ip
+            device["port"] = row.Device.port
+            device["alias"] = row.Device.alias
+            device["last_updated"] = row.Device.last_updated
+            device["enabled"] = row.Device.enabled
+            device["manufacturer"] = row.Device_model.manufacturer
+            device["model"] = row.Device_model.model
+            device["repo"] = row.Repo.repo_name
+            devices.append(device)
+        return jsonify(devices)
 
 
 @oxidized_ns.route("/node/fetch/<string:ip>")
