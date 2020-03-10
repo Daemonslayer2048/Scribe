@@ -8,6 +8,7 @@ import flask
 import os
 from . import db
 from . import Device, Repo, Device_model, User, Group
+from ..shared import git
 
 api_bp = Blueprint("api", __name__, url_prefix="/api")
 api = Api(
@@ -210,19 +211,24 @@ class Device_config(Resource):
 # Needs to be completed
 @devices_ns.route("/config/<string:alias>/<string:hash>")
 @devices_ns.doc(description="Get a devices most recent config (NOT DONE YET)")
-class Device_config(Resource):
+class Device_config_at_hash(Resource):
+    def get(Resource, alias, hash):
+        config = git.get_config_at_hash(alias, hash)
+        response = make_response(config)
+        response.headers['content-type'] = 'text/plain'
+        return response
+
+@devices_ns.route("/config/<string:alias>/get_git_log")
+@devices_ns.doc(description="Get a devices git log")
+class Device_config_git_logs(Resource):
     def get(Resource, alias):
         response = (
             db.session.query(Device, Repo).filter(Device.repo == Repo.repo_name).first()
         )
         repo_dir = "./Repositories/" + response.Repo.repo_name
-        config_file = repo_dir + "/" + alias + ".cfg"
-        try:
-            config = open(config_file, "r").read()
-            return config
-        except FileNotFoundError:
-            return "A config for this device does not exist yet!"
-
+        config_file = repo_dir + "/" + response.Device.alias + ".cfg"
+        commits = git.get_device_git_log(response.Device.alias)
+        return commits
 
 @devices_ns.route("/<string:alias>")
 class Device_single(Resource):
@@ -404,7 +410,7 @@ class Repos(Resource):
 
 
 @repos_ns.route("<string:repo_name>")
-class Repos_ops(Resource):
+class Repo_Ops(Resource):
     def put(Resource, repo_name):
         repo = Repo(repo_name=repo_name)
         db.session.add(repo)
@@ -415,7 +421,6 @@ class Repos_ops(Resource):
         Repo.query.filter(Repo.repo_name == repo_name).delete()
         db.session.commit()
         return str("Repo %s removed" % (repo_name))
-
 
 ###################################################
 #                      Users                      #

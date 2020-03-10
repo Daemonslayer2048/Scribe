@@ -40,3 +40,10 @@ def get_device_git_log(alias):
     repo = get_repo(str("./Repositories/" + repo_name))
     log = get_git_log(repo, alias + ".cfg")
     return log
+
+def get_config_at_hash(alias, hash):
+    repo_name = repos.get_device_repo(alias).Repo.repo_name
+    repo = get_repo(str("./Repositories/" + repo_name))
+    show = hash + ":" + alias + ".cfg"
+    config = repo.show(show, _tty_out=False)
+    return str(config)
