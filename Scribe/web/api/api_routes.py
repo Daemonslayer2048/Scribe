@@ -3,6 +3,7 @@ from flask_restx import Resource, Api, fields
 from dataclasses import dataclass
 from flask import Blueprint
 from flask import jsonify
+from flask import make_response
 import flask
 import os
 from . import db
@@ -14,6 +15,7 @@ api = Api(
     version="1.0",
     title="Scribe API",
     description="An API for interfacing with Scribe",
+    default_mediatype="application/json",
 )
 ###################################################
 #                     Devices                     #
@@ -194,8 +196,13 @@ class Device_config(Resource):
         repo_dir = "./Repositories/" + response.Repo.repo_name
         config_file = repo_dir + "/" + alias + ".cfg"
         try:
+            # JSON can not be retuned here for obviouse reasons
+            # Instead flask esponse is used to create the correct response and response type
+            # Swagger will claim response type is application/json, unknown how to change this
             config = open(config_file, "r").read()
-            return config
+            response = make_response(config)
+            response.headers['content-type'] = 'text/plain'
+            return response
         except FileNotFoundError:
             return "A config for this device does not exist yet!"
 

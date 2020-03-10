@@ -24,7 +24,7 @@ def login():
 @home_bp.route("logout")
 def logout():
     logout_user()
-    return flask.redirect(flask.url_for("index"))
+    return flask.redirect(flask.url_for("user_bp.home"))
 
 
 @home_bp.route("web")

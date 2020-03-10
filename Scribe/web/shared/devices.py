@@ -12,6 +12,6 @@ def get_config(alias):
     file = "./Repositories/" + repo + "/" + alias + ".cfg"
     try:
         config = open(file, "r").read()
+        return config
     except FileNotFoundError:
-        print("A config for this device does not exist yet!")
-    return config
+        return None
