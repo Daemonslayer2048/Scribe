@@ -1,4 +1,5 @@
 from flask_login import current_user, login_user, logout_user, login_required
+from flask import redirect, url_for
 from . import Device, Repo, Device_model, User
 from . import home_bp
 from . import db
@@ -37,3 +38,8 @@ def home():
         .all()
     )
     return flask.render_template("home.html", devices=devices)
+
+@home_bp.route("")
+@login_required
+def base():
+    return redirect(url_for('home_bp.home'))
