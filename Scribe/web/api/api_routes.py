@@ -208,7 +208,6 @@ class Device_config(Resource):
             return "A config for this device does not exist yet!"
 
 
-# Needs to be completed
 @devices_ns.route("/config/<string:alias>/<string:hash>")
 @devices_ns.doc(description="Get a devices most recent config (NOT DONE YET)")
 class Device_config_at_hash(Resource):
@@ -479,7 +478,21 @@ class Users_ops(Resource):
 ###################################################
 #                       Web                       #
 ###################################################
+api_web_ns = api.namespace("web_api", description="Endpoints for web")
 
+@api_web_ns.route("/config/<string:alias>/<string:hash>")
+class web_api(Resource):
+    def get(Resource, alias, hash):
+        config = git.get_config_at_hash(alias, hash)
+        html = """"""
+        html += "<tbody>" + "\n"
+        for line in config.splitlines():
+            config_line = "<tr> <td> " + str(line).rstrip() + " </td> </tr>" + "\n"
+            html += config_line
+        html += "</tbody>"
+        response = make_response(str(html))
+        response.headers['content-type'] = 'text/html'
+        return response
 ###################################################
 #                      Hello                      #
 ###################################################
