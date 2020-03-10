@@ -1,10 +1,7 @@
-from flask_login import current_user, login_user, logout_user, login_required
-from flask_restx import Resource, Api, fields
-from dataclasses import dataclass
+from flask_restx import Resource, Api
 from flask import Blueprint
 from flask import jsonify
 from flask import make_response
-import flask
 import os
 from . import db
 from . import Device, Repo, Device_model, User, Group
