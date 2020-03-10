@@ -27,7 +27,7 @@ def clean_config(config):
 
 
 def get_config(device):
-    ssh = ssh_connection(device["ip"], device["username"], device["password"])
+    ssh = ssh_connection(device.Device.ip, device.Device.user, device.Device.password)
     shell = ssh.invoke_shell()
     config = ssh_command(shell, "show configuration | no-more | display set")
     ssh_command(shell, "exit")
