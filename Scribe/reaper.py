@@ -9,6 +9,7 @@ import argparse
 ##############################################
 # Definitions
 
+
 def reap_device_config(device):
     if device.Device_model.os == "EdgeSwitch":
         config = edgeswitch.get_config(device)
