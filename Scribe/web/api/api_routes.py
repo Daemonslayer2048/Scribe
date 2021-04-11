@@ -4,7 +4,7 @@ from flask import jsonify
 from flask import make_response
 import os
 from . import db
-from . import Device, Repo, Device_model, User, Group
+from . import Device, Repo, Device_Model, User, Group
 from ..shared import git
 
 api_bp = Blueprint("api", __name__, url_prefix="/api")
@@ -106,9 +106,9 @@ class Devices(Resource):
     def get(Resource):
         devices = []
         response = (
-            db.session.query(Device, Repo, Device_model)
+            db.session.query(Device, Repo, Device_Model)
             .filter(Device.repo == Repo.repo_name)
-            .filter(Device.model == Device_model.id)
+            .filter(Device.model == Device_Model.id)
             .all()
         )
         for row in response:
@@ -118,8 +118,8 @@ class Devices(Resource):
             device["alias"] = row.Device.alias
             device["last_updated"] = row.Device.last_updated
             device["enabled"] = row.Device.enabled
-            device["manufacturer"] = row.Device_model.manufacturer
-            device["model"] = row.Device_model.model
+            device["manufacturer"] = row.Device_Model.manufacturer
+            device["model"] = row.Device_Model.model
             device["repo"] = row.Repo.repo_name
             devices.append(device)
         return jsonify(devices)
@@ -199,7 +199,7 @@ class Device_config(Resource):
             # Swagger will claim response type is application/json, unknown how to change this
             config = open(config_file, "r").read()
             response = make_response(config)
-            response.headers['content-type'] = 'text/plain'
+            response.headers["content-type"] = "text/plain"
             return response
         except FileNotFoundError:
             return "A config for this device does not exist yet!"
@@ -211,8 +211,9 @@ class Device_config_at_hash(Resource):
     def get(Resource, alias, hash):
         config = git.get_config_at_hash(alias, hash)
         response = make_response(config)
-        response.headers['content-type'] = 'text/plain'
+        response.headers["content-type"] = "text/plain"
         return response
+
 
 @devices_ns.route("/config/<string:alias>/get_git_log")
 @devices_ns.doc(description="Get a devices git log")
@@ -226,14 +227,15 @@ class Device_config_git_logs(Resource):
         commits = git.get_device_git_log(response.Device.alias)
         return commits
 
+
 @devices_ns.route("/<string:alias>")
 class Device_single(Resource):
     @devices_ns.doc(description="Get a device")
     def get(Resource, alias):
         response = (
-            db.session.query(Device, Repo, Device_model)
+            db.session.query(Device, Repo, Device_Model)
             .filter(Device.repo == Repo.repo_name)
-            .filter(Device.model == Device_model.id)
+            .filter(Device.model == Device_Model.id)
             .filter(Device.alias == alias)
             .first()
         )
@@ -243,8 +245,8 @@ class Device_single(Resource):
         device["alias"] = response.Device.alias
         device["last_updated"] = response.Device.last_updated
         device["enabled"] = response.Device.enabled
-        device["manufacturer"] = response.Device_model.manufacturer
-        device["model"] = response.Device_model.model
+        device["manufacturer"] = response.Device_Model.manufacturer
+        device["model"] = response.Device_Model.model
         device["repo"] = response.Repo.repo_name
         return jsonify(device)
 
@@ -260,9 +262,9 @@ class Oxidized_Nodes(Resource):
     def get(Resource):
         devices = []
         response = (
-            db.session.query(Device, Repo, Device_model)
+            db.session.query(Device, Repo, Device_Model)
             .filter(Device.repo == Repo.repo_name)
-            .filter(Device.model == Device_model.id)
+            .filter(Device.model == Device_Model.id)
             .all()
         )
         for row in response:
@@ -272,8 +274,8 @@ class Oxidized_Nodes(Resource):
             device["alias"] = row.Device.alias
             device["last_updated"] = row.Device.last_updated
             device["enabled"] = row.Device.enabled
-            device["manufacturer"] = row.Device_model.manufacturer
-            device["model"] = row.Device_model.model
+            device["manufacturer"] = row.Device_Model.manufacturer
+            device["model"] = row.Device_Model.model
             device["repo"] = row.Repo.repo_name
             devices.append(device)
         return jsonify(devices)
@@ -283,13 +285,19 @@ class Oxidized_Nodes(Resource):
 class Oxidized_config(Resource):
     def get(Resource, ip):
         response = (
-            db.session.query(Device, Repo, Device_model)
+            db.session.query(Device, Repo, Device_Model)
             .filter(Device.repo == Repo.repo_name)
-            .filter(Device.model == Device_model.id)
+            .filter(Device.model == Device_Model.id)
             .filter(Device.ip == ip)
             .first()
         )
-        file = "./Repositories/" + response.Repo.repo_name + "/" + response.Device.alias + ".cfg"
+        file = (
+            "./Repositories/"
+            + response.Repo.repo_name
+            + "/"
+            + response.Device.alias
+            + ".cfg"
+        )
         try:
             config = open(file, "r").read()
             return config
@@ -354,10 +362,10 @@ add_model.add_argument(
 
 
 @models_ns.route("")
-class Device_models(Resource):
+class Device_Models(Resource):
     def get(Resource):
         models = []
-        response = Device_model.query.all()
+        response = Device_Model.query.all()
         for row in response:
             model = {}
             model["id"] = row.id
@@ -370,7 +378,7 @@ class Device_models(Resource):
     @models_ns.doc(parser=add_model, description="Add a device model")
     def post(Resource):
         args = add_model.parse_args()
-        model = Device_model(
+        model = Device_Model(
             manufacturer=args.manufacturer, model=args.model, os=args.os
         )
         db.session.add(model)
@@ -381,7 +389,7 @@ class Device_models(Resource):
 @models_ns.route("<string:model_id>")
 class Models_ops(Resource):
     def delete(Resource, model_id):
-        Device_model.query.filter(Device_model.id == model_id).delete()
+        Device_Model.query.filter(Device_Model.id == model_id).delete()
         db.session.commit()
         return str("Model %s removed" % (model_id))
 
@@ -417,6 +425,7 @@ class Repo_Ops(Resource):
         Repo.query.filter(Repo.repo_name == repo_name).delete()
         db.session.commit()
         return str("Repo %s removed" % (repo_name))
+
 
 ###################################################
 #                      Users                      #
@@ -477,6 +486,7 @@ class Users_ops(Resource):
 ###################################################
 api_web_ns = api.namespace("web_api", description="Endpoints for web")
 
+
 @api_web_ns.route("/config/<string:alias>/<string:hash>")
 class web_api(Resource):
     def get(Resource, alias, hash):
@@ -488,8 +498,10 @@ class web_api(Resource):
             html += config_line
         html += "</tbody>"
         response = make_response(str(html))
-        response.headers['content-type'] = 'text/html'
+        response.headers["content-type"] = "text/html"
         return response
+
+
 ###################################################
 #                      Hello                      #
 ###################################################

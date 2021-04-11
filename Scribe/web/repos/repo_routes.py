@@ -2,7 +2,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 import flask
 from . import repo_bp
 from . import db
-from . import Repo, Device, Device_model
+from . import Repo, Device, Device_Model
 
 
 @repo_bp.route("/")
@@ -16,9 +16,9 @@ def home():
 @login_required
 def web_repo_devices(repo):
     devices = (
-        db.session.query(Repo, Device, Device_model)
+        db.session.query(Repo, Device, Device_Model)
         .filter(Device.repo == Repo.repo_name)
-        .filter(Device.model == Device_model.id)
+        .filter(Device.model == Device_Model.id)
         .filter(Repo.repo_name == str(repo))
         .all()
     )

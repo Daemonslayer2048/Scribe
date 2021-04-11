@@ -1,5 +1,6 @@
 from . import repos, git
 
+
 def get_config_at_hash(alias, hash):
     config = git.get_config_at_hash(alias, hash)
     html = """"""

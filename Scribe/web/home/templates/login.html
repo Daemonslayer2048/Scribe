@@ -19,4 +19,10 @@
         <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
         <p>{{ form.submit() }}</p>
     </form>
+    <div class="login-signup">
+      <div>
+        <span>Need to create an Account?</span>
+        <a href="{{ url_for('home_bp.signup') }}">Signup.</a>
+      </div>
+    </div>
 {% endblock %}

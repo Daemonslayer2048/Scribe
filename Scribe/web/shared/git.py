@@ -29,12 +29,14 @@ def get_git_log(repo, config_file):
         commits.append(commit)
     return commits
 
+
 def commit_to_repo(repo, message="No message"):
     try:
         repo.commit(m=message)
     except Exception as e:
         if "nothing to commit, working tree clean" in str(e):
             print("No change to repository!")
+
 
 def add(repo, config):
     repo.add(config + ".cfg")
@@ -50,6 +52,7 @@ def get_device_git_log(alias):
     repo = get_repo(str("./Repositories/" + repo_name))
     log = get_git_log(repo, alias + ".cfg")
     return log
+
 
 def get_config_at_hash(alias, hash):
     repo_name = repos.get_device_repo(alias).Repo.repo_name

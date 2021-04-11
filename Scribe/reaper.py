@@ -21,15 +21,25 @@ def reap_device_config(device):
         print("Unknown device type")
     return config
 
+
 def log_config_collection(alias, timestamp):
-    db.session.query(Device).filter(Device.alias == alias).update({"last_updated": timestamp})
+    db.session.query(Device).filter(Device.alias == alias).update(
+        {"last_updated": timestamp}
+    )
     db.session.commit()
+
 
 ##########################################################################
 #  ArgumentParser
-parser = argparse.ArgumentParser(prog="PROG", description="""""", epilog="""""",)
+parser = argparse.ArgumentParser(
+    prog="PROG",
+    description="""""",
+    epilog="""""",
+)
 parser.add_argument(
-    "-d", "--device", help="",
+    "-d",
+    "--device",
+    help="",
 )
 args = parser.parse_args()
 
