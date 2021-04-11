@@ -1,6 +1,13 @@
 # Scribe
 An Oxidized alternative
 
+# Installation  
+## Fedora 33  
+Os packages:  
+```
+dnf install gcc libffi-devel
+```
+
 ## Complete
 ### Web  
  * Working Example
@@ -17,6 +24,7 @@ An Oxidized alternative
 
 ## To-do
 * Working Docker Image
+* [Working Packer Image](https://learn.hashicorp.com/packer)
 * Git Repos
   * Remote
 * Emails

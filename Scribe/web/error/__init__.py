@@ -1,10 +1,8 @@
 from flask import Blueprint
-from ..models import Device, Repo, Device_model, User
-from ..forms import LoginForm, SignupForm
 from .. import db
 
-home_bp = Blueprint(
-    "home_bp",
+error_bp = Blueprint(
+    "error_bp",
     __name__,
     template_folder="templates",
     static_folder="static",

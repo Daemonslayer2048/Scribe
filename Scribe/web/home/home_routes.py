@@ -3,7 +3,7 @@ from flask import redirect, url_for
 from . import Device, Repo, Device_model, User
 from . import home_bp
 from . import db
-from . import LoginForm
+from . import LoginForm, SignupForm
 import flask
 
 
@@ -21,6 +21,29 @@ def login():
         return flask.redirect(flask.url_for("home_bp.home"))
     return flask.render_template("login.html", title="Sign In", form=form)
 
+@home_bp.route("signup", methods=["GET","POST"])
+def signup():
+    form = SignupForm()
+    if form.validate_on_submit():
+        existing_user = User.query.filter_by(email=form.email.data).first()
+        if existing_user is None:
+            user = User(
+                username=form.name.data,
+                email=form.email.data,
+            )
+            user.set_password(form.password.data)
+            db.session.add(user)
+            db.session.commit()  # Create new user
+            login_user(user)  # Log in as newly created user
+            return flask.redirect(url_for('home_bp.home'))
+        flask.flash('A user already exists with that email address.')
+    return flask.render_template(
+        'signup.html',
+        title='Create an Account.',
+        form=form,
+        template='signup-page',
+        body="Sign up for a user account."
+    )
 
 @home_bp.route("logout")
 def logout():
