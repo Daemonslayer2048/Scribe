@@ -32,7 +32,7 @@ def signup():
                 email=form.email.data,
             )
         if len(User.query.all()) == 0:
-            user.group = admin
+            user.group = 1
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()  # Create new user

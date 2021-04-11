@@ -15,6 +15,14 @@ if app.config['INSTALLED'] == True:
     manager.add_command('db', MigrateCommand)
     login = LoginManager(app)
     login.login_view = "home_bp.login"
+    # Make sure needed groups exist
+    from .models import Group
+    if len(Group.query.all()) == 0:
+        admin_group = Group(
+            groupname = "Administrators"
+        )
+        db.session.add(admin_group)
+        db.session.commit()
     with app.app_context():
         from .groups import group_routes
         from .device_models import device_model_routes
@@ -32,6 +40,7 @@ if app.config['INSTALLED'] == True:
         app.register_blueprint(device_routes.device_bp)
         app.register_blueprint(api_routes.api_bp)
 else:
+    # You need to throw an error if the config does not exist
     with app.app_context():
         from .error import error_routes
         app.register_blueprint(error_routes.error_bp)
