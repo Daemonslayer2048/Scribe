@@ -37,7 +37,7 @@ class Repo(db.Model):
         return "<Repo {}>".format(self.repo_name)
 
 
-class Device_model(db.Model):
+class Device_Model(db.Model):
     __tablename__ = "device_models"
     id = db.Column(db.Integer, primary_key=True)
     manufacturer = db.Column(db.String(120), nullable=False)
@@ -66,7 +66,6 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True, nullable=False)
     email = db.Column(db.String(120), index=True, unique=True, nullable=False)
-    group = db.Column(db.String(64), db.ForeignKey("groups.groupname"))
     password_hash = db.Column(db.String(128), unique=True, nullable=False)
 
     def set_password(self, password):
@@ -87,8 +86,16 @@ class Group(db.Model):
     def __repr__(self):
         return "<Group {}>".format(self.groupname)
 
+class Group_Associations(db.Model):
+    __tablename__ = "group_associations"
+    id = db.Column(db.Integer, primary_key=True)
+    group_id = db.Column(db.Integer, db.ForeignKey("groups.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 
-class Device_associations(db.Model):
+    def __repr__(self):
+        return "<Group Associations {}>".format(self.username)
+
+class Device_Associations(db.Model):
     __tablename__ = "device_associations"
     id = db.Column(db.Integer, primary_key=True)
     device = db.Column(db.String(120), db.ForeignKey("devices.alias"))

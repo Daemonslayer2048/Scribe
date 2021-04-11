@@ -1,5 +1,5 @@
 from flask import Blueprint
-from ..models import Device_model
+from ..models import Device_Model
 from .. import db
 
 device_model_bp = Blueprint(

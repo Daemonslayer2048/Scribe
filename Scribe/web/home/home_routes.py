@@ -1,6 +1,6 @@
 from flask_login import current_user, login_user, logout_user, login_required
 from flask import redirect, url_for
-from . import Device, Repo, Device_model, User
+from . import Device, Repo, Device_Model, User
 from . import home_bp
 from . import db
 from . import LoginForm, SignupForm
@@ -31,12 +31,14 @@ def signup():
                 username=form.name.data,
                 email=form.email.data,
             )
-            user.set_password(form.password.data)
-            db.session.add(user)
-            db.session.commit()  # Create new user
-            login_user(user)  # Log in as newly created user
-            return flask.redirect(url_for('home_bp.home'))
-        flask.flash('A user already exists with that email address.')
+        if len(User.query.all()) == 0:
+            user.group = admin
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()  # Create new user
+        login_user(user)  # Log in as newly created user
+        return flask.redirect(url_for('home_bp.home'))
+    flask.flash('A user already exists with that email address.')
     return flask.render_template(
         'signup.html',
         title='Create an Account.',
@@ -55,9 +57,9 @@ def logout():
 @login_required
 def home():
     devices = (
-        db.session.query(Device, Repo, Device_model)
+        db.session.query(Device, Repo, Device_Model)
         .filter(Device.repo == Repo.repo_name)
-        .filter(Device.model == Device_model.id)
+        .filter(Device.model == Device_Model.id)
         .all()
     )
     return flask.render_template("home.html", devices=devices)

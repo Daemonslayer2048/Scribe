@@ -33,7 +33,7 @@
       {% endif %} </td>
       <td>{{ device.Device.ip }}</td>
       <td><a href={{ url_for('repo_bp.web_repo_devices', repo=device.Repo.repo_name) }}>{{ device.Repo.repo_name }}</a></td>
-      <td>{{ device.Device_model.model }}</td>
+      <td>{{ device.Device_Model.model }}</td>
       <td>{{ device.Device.last_updated }}</td>
     </tr>
     {% endfor %}
