@@ -8,19 +8,18 @@ from flask_migrate import Migrate, MigrateCommand
 app = Flask(__name__, instance_relative_config=False)
 db = SQLAlchemy()
 app.config.from_object("config.Config")
-if app.config['INSTALLED'] == True:
+if app.config["INSTALLED"] == True:
     db = SQLAlchemy(app)
     migrate = Migrate(app, db)
     manager = Manager(app)
-    manager.add_command('db', MigrateCommand)
+    manager.add_command("db", MigrateCommand)
     login = LoginManager(app)
     login.login_view = "home_bp.login"
     # Make sure needed groups exist
     from .models import Group
+
     if len(Group.query.all()) == 0:
-        admin_group = Group(
-            groupname = "Administrators"
-        )
+        admin_group = Group(groupname="Administrators")
         db.session.add(admin_group)
         db.session.commit()
     with app.app_context():
@@ -43,4 +42,5 @@ else:
     # You need to throw an error if the config does not exist
     with app.app_context():
         from .error import error_routes
+
         app.register_blueprint(error_routes.error_bp)

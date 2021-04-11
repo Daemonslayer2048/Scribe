@@ -21,7 +21,8 @@ def login():
         return flask.redirect(flask.url_for("home_bp.home"))
     return flask.render_template("login.html", title="Sign In", form=form)
 
-@home_bp.route("signup", methods=["GET","POST"])
+
+@home_bp.route("signup", methods=["GET", "POST"])
 def signup():
     form = SignupForm()
     if form.validate_on_submit():
@@ -37,15 +38,16 @@ def signup():
         db.session.add(user)
         db.session.commit()  # Create new user
         login_user(user)  # Log in as newly created user
-        return flask.redirect(url_for('home_bp.home'))
-    flask.flash('A user already exists with that email address.')
+        return flask.redirect(url_for("home_bp.home"))
+    flask.flash("A user already exists with that email address.")
     return flask.render_template(
-        'signup.html',
-        title='Create an Account.',
+        "signup.html",
+        title="Create an Account.",
         form=form,
-        template='signup-page',
-        body="Sign up for a user account."
+        template="signup-page",
+        body="Sign up for a user account.",
     )
+
 
 @home_bp.route("logout")
 def logout():
@@ -64,7 +66,8 @@ def home():
     )
     return flask.render_template("home.html", devices=devices)
 
+
 @home_bp.route("")
 @login_required
 def base():
-    return redirect(url_for('home_bp.home'))
+    return redirect(url_for("home_bp.home"))

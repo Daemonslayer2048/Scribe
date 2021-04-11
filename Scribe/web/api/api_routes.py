@@ -199,7 +199,7 @@ class Device_config(Resource):
             # Swagger will claim response type is application/json, unknown how to change this
             config = open(config_file, "r").read()
             response = make_response(config)
-            response.headers['content-type'] = 'text/plain'
+            response.headers["content-type"] = "text/plain"
             return response
         except FileNotFoundError:
             return "A config for this device does not exist yet!"
@@ -211,8 +211,9 @@ class Device_config_at_hash(Resource):
     def get(Resource, alias, hash):
         config = git.get_config_at_hash(alias, hash)
         response = make_response(config)
-        response.headers['content-type'] = 'text/plain'
+        response.headers["content-type"] = "text/plain"
         return response
+
 
 @devices_ns.route("/config/<string:alias>/get_git_log")
 @devices_ns.doc(description="Get a devices git log")
@@ -225,6 +226,7 @@ class Device_config_git_logs(Resource):
         config_file = repo_dir + "/" + response.Device.alias + ".cfg"
         commits = git.get_device_git_log(response.Device.alias)
         return commits
+
 
 @devices_ns.route("/<string:alias>")
 class Device_single(Resource):
@@ -289,7 +291,13 @@ class Oxidized_config(Resource):
             .filter(Device.ip == ip)
             .first()
         )
-        file = "./Repositories/" + response.Repo.repo_name + "/" + response.Device.alias + ".cfg"
+        file = (
+            "./Repositories/"
+            + response.Repo.repo_name
+            + "/"
+            + response.Device.alias
+            + ".cfg"
+        )
         try:
             config = open(file, "r").read()
             return config
@@ -418,6 +426,7 @@ class Repo_Ops(Resource):
         db.session.commit()
         return str("Repo %s removed" % (repo_name))
 
+
 ###################################################
 #                      Users                      #
 ###################################################
@@ -477,6 +486,7 @@ class Users_ops(Resource):
 ###################################################
 api_web_ns = api.namespace("web_api", description="Endpoints for web")
 
+
 @api_web_ns.route("/config/<string:alias>/<string:hash>")
 class web_api(Resource):
     def get(Resource, alias, hash):
@@ -488,8 +498,10 @@ class web_api(Resource):
             html += config_line
         html += "</tbody>"
         response = make_response(str(html))
-        response.headers['content-type'] = 'text/html'
+        response.headers["content-type"] = "text/html"
         return response
+
+
 ###################################################
 #                      Hello                      #
 ###################################################
