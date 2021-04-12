@@ -1,6 +1,7 @@
 # Scribe
 An Oxidized alternative
 
+
 # Installation  
 ## Fedora 33  
 Os packages:  
@@ -21,6 +22,10 @@ dnf install gcc libffi-devel
  * Endpoint testing with GitLab CI (On going)
  * Git Repos
    * Local
+
+# Special Thanks  
+## WebUI
+The webui is based on the repo [Flaskex](https://github.com/anfederico/Flaskex)
 
 ## To-do
 * Working Docker Image

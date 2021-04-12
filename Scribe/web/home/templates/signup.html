@@ -1,78 +1,97 @@
-{% block content %}
-  <div class="form-wrapper">
-    {% for message in get_flashed_messages() %}
-      <div class="alert alert-warning">
-        <button
-          type="button"
-          class="close"
-          data-dismiss="alert">
-          x
-        </button>
-        {{ message }}
+{% extends "base.html" %}
+{% block body %}
+<section class="hero is-dark is-medium">
+  <nav class="navbar is-transparent">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="/">
+        <h6 href="/" class="subtitle"><strong>Scribe</strong></h6>
+      </a>
+      <div id="navbar-burger-id" class="navbar-burger burger" data-target="navbar-menu-id">
+        <span></span>
+        <span></span>
+        <span></span>
       </div>
-    {% endfor %}
-
-    <h1>Sign Up</h1>
-
-    <form method="POST" action="/signup">
-      {{ form.csrf_token }}
-
-      <fieldset class="name">
-        {{ form.name.label }}
-        {{ form.name(placeholder='John Smith') }}
-        {% if form.name.errors %}
-          <ul class="errors">
-            {% for error in form.email.errors %}
-              <li>{{ error }}</li>{% endfor %}
-          </ul>
-        {% endif %}
-      </fieldset>
-
-      <fieldset class="email">
-        {{ form.email.label }}
-        {{ form.email(placeholder='youremail@example.com') }}
-        {% if form.email.errors %}
-          <ul class="errors">
-            {% for error in form.email.errors %}
-              <li>{{ error }}</li>{% endfor %}
-          </ul>
-        {% endif %}
-      </fieldset>
-
-      <fieldset class="password">
-        {{ form.password.label }}
-        {{ form.password }}
-        {% if form.password.errors %}
-          <ul class="errors">
-            {% for error in form.password.errors %}
-              <li>{{ error }}</li>{% endfor %}
-          </ul>
-        {% endif %}
-      </fieldset>
-
-      <fieldset class="confirm">
-        {{ form.confirm.label }}
-        {{ form.confirm }}
-        {% if form.confirm.errors %}
-          <ul class="errors">
-            {% for error in form.confirm.errors %}
-              <li>{{ error }}</li>{% endfor %}
-          </ul>
-        {% endif %}
-      </fieldset>
-
-      <div class="submit-button">
-        {{ form.submit }}
-      </div>
-
-    </form>
-
-    <div class="login-signup">
-      <div>
-        <span>Already have an account?</span>
-        <a href="{{ url_for('home_bp.login') }}">Log in.</a>
+    </div>
+  </nav>
+</section>
+<title>Scribe</title>
+<section class="hero is-primary is-bold is-fullheight">
+  <div class="hero-body">
+    <div class="container has-text-centered">
+      <div class="columns">
+        <div class="column is-auto">
+          <br>
+          <p class="title is-2">Scribe</p>
+        </div>
+      <div class="column is-auto">
+        <div id="signup-box" class="signup-box">
+          <form method="POST" action="/signup">
+            {{ form.hidden_tag() }}{{ form.csrf_token }}
+            <p>
+              {{ form.name.label }}
+              {{ form.name(placeholder='John Smith') }}
+              {% if form.name.errors %}
+              <ul class="errors">
+                {% for error in form.email.errors %}
+                  <li>{{ error }}</li>{% endfor %}
+              </ul>
+              {% endif %}
+            </p>
+            <p>
+              {{ form.email.label }}
+              {{ form.email(placeholder='youremail@example.com') }}
+              {% if form.email.errors %}
+              <ul class="errors">
+                {% for error in form.email.errors %}
+                  <li>{{ error }}</li>{% endfor %}
+                  </ul>
+                {% endif %}
+            </p>
+            <p>
+              {{ form.password.label }}
+              {{ form.password }}
+              {% if form.password.errors %}
+              <ul class="errors">
+                {% for error in form.password.errors %}
+                  <li>{{ error }}</li>{% endfor %}
+                  </ul>
+                {% endif %}
+            </p>
+            <p>
+              {{ form.confirm.label }}
+              {{ form.confirm }}
+              {% if form.confirm.errors %}
+              <ul class="errors">
+                {% for error in form.confirm.errors %}
+                <li>{{ error }}</li>{% endfor %}
+              </ul>
+              {% endif %}
+            </p>
+            <div class="submit-button">
+              {{ form.submit }}
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
-
+</section>
+<section class="hero-foot">
+  <footer class="footer">
+    <div class="container">
+      <div class="content has-text-centered">
+        <p>
+          <strong>Scribe</strong>
+          <a class="icon has-text-primary" href="https://github.com/Daemonslayer2048/Scribe" target="_blank">
+            <i class="fa fa-github"></i>
+          </a>
+          <br>
+          <span>Already have an account?</span>
+          <a href="{{ url_for('home_bp.login') }}">Log in.</a>
+        </p>
+      </div>
+    </div>
+    </div>
+  </footer>
+</section>
 {% endblock %}
