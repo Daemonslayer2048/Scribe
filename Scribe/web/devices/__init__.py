@@ -1,6 +1,7 @@
 from flask import Blueprint
 from ..models import Group
 from .. import db
+from ..forms import NewDeviceForm
 
 device_bp = Blueprint(
     "device_bp",

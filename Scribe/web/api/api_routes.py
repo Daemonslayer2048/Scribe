@@ -5,7 +5,7 @@ from flask import make_response
 import os
 from . import db
 from . import Device, Repo, Device_Model, User, Group
-from ..shared import git
+from ..lib import git
 
 api_bp = Blueprint("api", __name__, url_prefix="/api")
 api = Api(
@@ -95,8 +95,7 @@ class Devices(Resource):
                 enabled=enabled,
                 repo=args.repo,
             )
-            db.session.add(device)
-            db.session.commit()
+            device.commit_to_db()
             return "Adding device succeeded"
         except Exception as e:
             print(e)

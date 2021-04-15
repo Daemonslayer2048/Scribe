@@ -9,5 +9,4 @@ from . import Group
 @login_required
 def home():
     groups = Group.query.all()
-    print(str(groups))
     return flask.render_template("groups.html", groups=groups)

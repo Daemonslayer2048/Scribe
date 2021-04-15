@@ -1,7 +1,7 @@
 from flask_login import current_user, login_user, logout_user, login_required
-from ..shared import git, repos, models, devices
+from ..lib import git, repos, models, devices
+from . import NewDeviceForm
 from . import device_bp
-from . import db
 import flask
 
 
@@ -15,4 +15,11 @@ def config(alias):
     model = models.get_devices_model(alias)
     return flask.render_template(
         "config.html", repo=repo, model=model, alias=alias, config=config, logs=logs
+    )
+
+@device_bp.route("/new_device", methods=["GET", "POST"])
+@login_required
+def new_device():
+    return flask.render_template(
+        "new_device.jinja2"
     )

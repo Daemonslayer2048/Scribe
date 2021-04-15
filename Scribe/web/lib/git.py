@@ -14,20 +14,23 @@ def get_repo(repo_dir):
 
 
 def get_git_log(repo, config_file):
-    log = repo.log(
-        "--pretty=format:%h:%an:%ai:%s", "--follow", config_file, _tty_out=False
-    )
     commits = []
-    for line in log:
-        commit = {}
-        commit["Hash"] = line.split(":")[0]
-        commit["Author"] = line.split(":")[1]
-        commit["Date"] = (
-            line.split(":")[2] + ":" + line.split(":")[3] + ":" + line.split(":")[4]
+    try:
+        log = repo.log(
+            "--pretty=format:%h:%an:%ai:%s", "--follow", config_file, _tty_out=False
         )
-        commit["Message"] = line.rstrip().split(":")[5]
-        commits.append(commit)
-    return commits
+        for line in log:
+            commit = {}
+            commit["Hash"] = line.split(":")[0]
+            commit["Author"] = line.split(":")[1]
+            commit["Date"] = (
+                line.split(":")[2] + ":" + line.split(":")[3] + ":" + line.split(":")[4]
+            )
+            commit["Message"] = line.rstrip().split(":")[5]
+            commits.append(commit)
+        return commits
+    except Exception as e:
+        return commits
 
 
 def commit_to_repo(repo, message="No message"):

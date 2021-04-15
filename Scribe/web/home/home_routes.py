@@ -6,7 +6,7 @@ from . import db
 from . import LoginForm, SignupForm
 import flask
 
-
+@login_required
 @home_bp.route("login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
@@ -21,7 +21,7 @@ def login():
         return flask.redirect(flask.url_for("home_bp.home"))
     return flask.render_template("login.html", title="Sign In", form=form)
 
-
+@login_required
 @home_bp.route("signup", methods=["GET", "POST"])
 def signup():
     form = SignupForm()
@@ -55,9 +55,28 @@ def logout():
     return flask.redirect(flask.url_for("user_bp.home"))
 
 
-@home_bp.route("web")
 @login_required
+@home_bp.route("web", methods=["GET", "POST"])
 def home():
+    if flask.request.method == "POST":
+        if flask.request.form.get("enable_device"):
+            device = flask.request.form.get("enable_device")
+            query = (
+                db.session.query(Device)
+                .filter(Device.alias == device)
+                .update({"enabled": True})
+            )
+            db.session.commit()
+        elif flask.request.form.get("disable_device"):
+            device = flask.request.form.get("disable_device")
+            query = (
+                db.session.query(Device)
+                .filter(Device.alias == device)
+                .update({"enabled": False})
+            )
+            db.session.commit()
+        else:
+            pass
     devices = (
         db.session.query(Device, Repo, Device_Model)
         .filter(Device.repo == Repo.repo_name)
@@ -67,7 +86,7 @@ def home():
     return flask.render_template("home.html", devices=devices)
 
 
-@home_bp.route("")
 @login_required
+@home_bp.route("")
 def base():
     return redirect(url_for("home_bp.home"))

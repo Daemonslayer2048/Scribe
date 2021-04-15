@@ -1,42 +1,43 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Config - Scribe</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="{{ url_for('static', filename='js/config.js') }}"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/configs.css') }}">
-    <ul>
-      <li><a class="current" href="{{ url_for('home_bp.home') }}">Home</a></li>
-      <li><a href="{{ url_for('repo_bp.home') }}">Repositories</a></li>
-      <li><a href="{{ url_for('device_model_bp.home') }}">Models</a></li>
-      <li><a href="{{ url_for('user_bp.home') }}">Users</a></li>
-      <li><a href="{{ url_for('group_bp.home') }}">Groups</a></li>
-    </ul>
-  <section class="container">
-    <div class="Device_Info">
-      <table id="generic_table" name=Device_Info>
+{% extends "base.html" %}
+{% block head %}
+{% include "navbar.html" %}
+{% endblock %}
+{% block body %}
+<section class="hero is-dark is-medium">
+<div class="columns">
+  <div class="column is-three-quarters">
+    <div class="table is-hoverable is-striped">
+      <table name=Device_Info>
         <tr><th>Device Info</th></tr>
-        <tr><td>Repository Name:       {{ repo.Repo.repo_name }}</td></tr>
+        <tr><td>Repository Name:      {{ repo.Repo.repo_name }}</td></tr>
         <tr><td>Device Manufacturer:  {{ model.Device_Model.manufacturer }}</td></tr>
-        <tr><td>Device Model:             {{ model.Device_Model.model }}</td></tr>
-        <tr><td>Device OS:                  {{ model.Device_Model.os }}</td></tr>
+        <tr><td>Device Model:         {{ model.Device_Model.model }}</td></tr>
+        <tr><td>Device OS:            {{ model.Device_Model.os }}</td></tr>
       </table>
     </div>
+  </div>
+  <div class="column is-one-quarter">
     <div class="Config-Menu">
-    <label>Config Version</label>
-    <select name="Configs" id="Configs" data-api="{{ url_for('home_bp.home', _external=True) }}" data-device="{{ alias }}">
+      <label>Config Version</label><br>
+      <select name="Configs" id="Configs" data-api="{{ url_for('home_bp.home', _external=True) }}" data-device="{{ alias }}">
       {% for log in logs %}
         <option value="{{ log.Hash }}"> {{ log.Date }} </option>
       {% endfor %}
-    </select>
+      </select>
+    </div>
   </div>
+</div>
 </section>
-  <div class="Config-Box">
-    <table id="config_table">
-      {% for line in config %}
-        <tr><td> {{ line }} </td></tr>
-      {% endfor %}
-    </table>
-  </div>
+<div class="box">
+  <strong>Device Config:</strong>
+  <pre><code>
+    {% for line in config -%}
+      {{ line }}
+    {% endfor -%}
+  </pre></code>
+</div>
+<br>
+{% endblock %}
+{% block footer %}
+{% include "default_footer.html" %}
+{% endblock %}

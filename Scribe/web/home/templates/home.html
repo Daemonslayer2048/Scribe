@@ -3,31 +3,48 @@
 {% include "navbar.html" %}
 {% endblock %}
 {% block body %}
-<table class="table is-hoverable is-striped">
-  <tr>
-    <th>Alias</th>
-    <th>Enabled</th>
-    <th>IP Address</th>
-    <th>Repository</th>
-    <th>Model</th>
-    <th>Last Updated</th>
-  </tr>
-  {% for device in devices %}
-  <tr>
-    <td><a href={{ url_for('device_bp.config', alias=device.Device.alias) }}>{{ device.Device.alias }}</a></td>
-    <td>{% if device.Device.enabled == 1 %}
-        <div onclick="DisableDevice('{{ request.host_url }}', '{{ device.Device.alias }}')" class="color-dot" style="background-color: #33cc33;"></div>
-      </button>
-    {% else %}
-        <div onclick="EnableDevice('{{ request.host_url }}', '{{ device.Device.alias }}')" class="color-dot" style="background-color: #ff3300"></div>
-    {% endif %} </td>
-    <td>{{ device.Device.ip }}</td>
-    <td><a href={{ url_for('repo_bp.web_repo_devices', repo=device.Repo.repo_name) }}>{{ device.Repo.repo_name }}</a></td>
-    <td>{{ device.Device_Model.model }}</td>
-    <td>{{ device.Device.last_updated }}</td>
-  </tr>
-  {% endfor %}
-</table>
+<div class="columns">
+  <div class="column is-three-quarters">
+    <table class="table is-hoverable is-striped">
+      <tr>
+        <th>Alias</th>
+        <th>Enabled</th>
+        <th>IP Address</th>
+        <th>Repository</th>
+        <th>Model</th>
+        <th>Last Updated</th>
+        <th>Edit</th>
+        <th>Delete</th>
+      </tr>
+      {% for device in devices %}
+      <tr>
+        <td><a href={{ url_for('device_bp.config', alias=device.Device.alias) }}>{{ device.Device.alias }}</a></td>
+        <td><form method ="post" action="/web">
+          {% if device.Device.enabled %}
+          <button name="disable_device" value={{ device.Device.alias }} class="button is-small is-rounded is-success">True</button></td>
+          {% else %}
+          <button name="enable_device" value={{ device.Device.alias }} class="button is-small is-rounded is-danger">False</button></td>
+          {% endif %}
+        </td></form>
+        <td>{{ device.Device.ip }}</td>
+        <td><a href={{ url_for('repo_bp.web_repo_devices', repo=device.Repo.repo_name) }}>{{ device.Repo.repo_name }}</a></td>
+        <td>{{ device.Device_Model.model }}</td>
+        <td>{{ device.Device.last_updated }}</td>
+        <td><button name="edit_device" value={{ device.Device.alias }} class="button is-small is-rounded is-info">Edit</button></td>
+        <td><button name="delete_device" value={{ device.Device.alias }} class="button is-small is-rounded is-danger">Delete</button></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+  <div class="column is-one-quarter">
+    <div id="generic-box" class="generic-box">
+      <div class="signup-area">
+        <h1 class="title">Devices</h1>
+        <button name="new_device" class="button is-small is-rounded is-warning">New Device</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 {% block footer %}
 {% include "default_footer.html" %}
